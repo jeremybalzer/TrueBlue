@@ -1,0 +1,32 @@
+header {
+	background-color: @darkgray;
+	border-bottom: solid 4px @blue;
+	box-sizing: border-box;
+	overflow: auto;
+	padding: 10px;
+	width: 100%;
+
+	img {
+		float: left;
+		margin: 0px 10px 0 0;
+		height: 50px;
+		width: auto;
+	}
+
+	div {
+		color: @blue;
+		font-size: 14px;
+		margin-top: 30px;
+		padding-bottom: 2px;
+
+		&.location {
+			color: @white;
+			font-weight: bold;
+			margin-top: 0px;
+		}
+
+		&.location ~ div {
+			margin-top: 0px;
+		}
+	}
+}

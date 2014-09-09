@@ -1,0 +1,32 @@
+.accordion {
+	.accordion-toggle {
+		color: @blue;
+		display: block;
+
+		&:hover {
+			color: lighten(@blue, 10%);
+		}
+
+		.arrow {
+			position: relative;
+			top: -2px;
+		}
+	}
+
+	.accordion-body {
+		max-height: 0px;
+		overflow: hidden;
+		.transition(all .75s cubic-bezier(0, 1, 0.5, 1));
+
+		&.open {
+			height: auto;
+			max-height: 400px;
+			padding: 10px 0;
+			overflow: auto;
+		}	
+
+		li {
+			padding: 0 0 5px 0;
+		}
+	}	
+}

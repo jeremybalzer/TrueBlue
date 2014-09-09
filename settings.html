@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>TrueBlue IVR Settings</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="container">
+            <header role="banner">
+                <img src="img/logo.jpg" alt="Trueblue"/>
+                <div class="location">Denver Office</div>
+                <div id="location-phone">720-333-0122</div>
+                <div>IVR Settings</div>
+            </header>
+
+            <main role="main">
+                <section class="lock">
+                    <h1>Record Audio</h1>
+                    <select>
+                        <option>Option</option>
+                        <option>Option</option>
+                        <option>Option</option>
+                        <option>Option</option>
+                    </select>
+                    <p>Enter the full web address (including http://) of the MP3 file to use for this greeting.</p>
+                    <form>
+                        <div class="inline">
+                            <input type="submit" value="Listen">
+                            <input type="url" placeholder="web address of the mp3">
+                        </div>
+                    </form>
+                    <div class="padlock">
+                        <a href="#" class="key"></a>
+                    </div>
+                </section>
+
+                <section class="lock">
+                    <h1>Open Hours</h1>
+                    <p>Set the IVR to use the Open Hours flow during the following times:</p>
+                    <form>
+                    </form>
+                    <div class="padlock">
+                        <a href="#" class="key"></a>
+                    </div>
+                </section>
+
+                <section class="lock">
+                    <h1>Who is on the call?</h1>
+                    <p>Enter the phone numbers of those who should receive voicemail notifications (separated with commas)</p>
+                    <form>
+                        <input type="text" placeholder="phone numbers">
+                    </form>
+                    <div class="accordion">
+                        <a href="#" class="accordion-toggle">
+                            Click to see who is already on the call <span class="arrow down"></span>
+                        </a>
+                        <ul class="accordion-body">
+                            <li>720-891-3780</li>
+                            <li>720-891-3780</li>
+                            <li>720-891-3780</li>
+                            <li>720-891-3780</li>
+                            <li>720-891-3780</li>
+                        </ul>
+                    </div>
+                    <div class="padlock">
+                        <a href="#" class="key"></a>
+                    </div>
+                </section>
+
+                <section class="lock">
+                    <h1>Transfer Number</h1>
+                    <p>What number should be used when the branch is unable to take calls?</p>
+                    <form>
+                        <input type="text" placeholder="tranfer phone number">
+                        <input type="submit" value="Update">
+                    </form>
+                    <div class="padlock">
+                        <a href="#" class="key"></a>
+                    </div>
+                </section>
+
+                <section class="lock">
+                    <h1>Temporary Open Hours</h1>
+                    <p>Set the IVR to use the Open Hours flow on the following day and times:</p>
+                    <form>
+                        <label>Which day:</label>
+                        <input type="text" placeholder="mm/dd/yyyy">
+                        <label>From</label>
+                        <input type="text">
+                        <label>To:</label>
+                        <input type="text">
+                        <input type="submit" value="Update">
+                    </form>
+                    <div class="padlock">
+                        <a href="#" class="key"></a>
+                    </div>
+                </section>
+            </main>
+
+            <footer role="contentinfo">
+                <img src="img/onereach-logo.png" alt="Powered by OneReach"/>
+            </footer>
+        </div>
+        <script src="js/jquery.js"></script>
+        <script src="js/dropkick.js"></script>
+        <script src="js/dropkick-jquery.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>

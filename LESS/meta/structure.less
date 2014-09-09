@@ -1,0 +1,38 @@
+// Grid Overrides
+@total-width: 100%;
+
+body {
+	font-size: 100%;
+}
+
+html, body {
+	height: 100%;
+}
+
+.container {
+	min-height: 100%;
+	position: relative;
+}
+
+main {
+	box-sizing: border-box;
+	padding: 10px 10px 50px 10px;
+	overflow: auto;
+	width: 100%;
+}
+
+section {
+	box-sizing: border-box;
+	border-bottom: solid 1px @blue;
+	padding: 25px 0 40px 0;
+	margin-right: auto;
+	margin-left: auto;
+	max-width: 500px;
+	overflow: auto;
+	position: relative;
+	width: 100%;
+
+	&:last-of-type {
+		border-bottom: none;
+	}
+}

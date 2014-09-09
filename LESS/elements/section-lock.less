@@ -1,0 +1,46 @@
+section {
+	.padlock {
+		position: absolute;
+		left: 0px;
+		bottom: 0px;
+		z-index: 10;
+	}
+
+	.key {
+		background-repeat: no-repeat;
+		background-position: left bottom;
+		background-size: 35px 20px;
+		display: block;
+		width: 35px;
+		height: 23px;
+		position: absolute;
+		bottom: 10px;
+		left: 0px;
+	}
+
+	&.lock {
+		opacity: .7;
+
+		.padlock {
+			top: 0;
+			right: 0;
+
+			.key {
+				background-image: url('img/lock.png');
+			}
+		}
+	}
+
+	&.unlock {
+		opacity: 1;
+
+		.padlock {
+			width: 35px;
+			height: 20px;
+
+			.key {
+				background-image: url('img/unlock.png');
+			}
+		}
+	}
+}

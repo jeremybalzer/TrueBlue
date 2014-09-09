@@ -1,0 +1,24 @@
+.arrow {
+	display: inline-block;
+	height: 0px;
+	margin-left: 3px;
+	width: 0px;
+
+	&.left, &.right {
+		border-top: solid 6px transparent;
+		border-bottom: solid 6px transparent;
+	}
+
+	&.up, &.down {
+		border-left: solid 6px transparent;
+		border-right: solid 6px transparent;
+	}
+
+	&.down {
+		border-top: solid 6px @blue;
+	}
+
+	&.up {
+		border-bottom: solid 6px @blue;
+	}
+}
