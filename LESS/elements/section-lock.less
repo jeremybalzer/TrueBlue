@@ -1,12 +1,12 @@
 section {
-	.padlock {
+	.screen {
 		position: absolute;
 		top: 0px;
 		right: 0px;
 		z-index: 10;
 	}
 
-	.key {
+	.padlock {
 		background-repeat: no-repeat;
 		background-position: left bottom;
 		background-size: 35px 20px;
@@ -14,31 +14,31 @@ section {
 		width: 35px;
 		height: 23px;
 		position: absolute;
-		top: 25px;
+		top: 10px;
 		right: 0px;
 	}
 
-	&.lock {
+	&.locked {
 		opacity: .7;
 
-		.padlock {
-			top: 0;
-			right: 0;
+		.screen {
+			bottom: 0;
+			left: 0;
 
-			.key {
+			.padlock {
 				background-image: url('img/lock.png');
 			}
 		}
 	}
 
-	&.unlock {
+	&.unlocked {
 		opacity: 1;
 
-		.padlock {
+		.screen {
 			width: 35px;
 			height: 20px;
 
-			.key {
+			.padlock {
 				background-image: url('img/unlock.png');
 			}
 		}

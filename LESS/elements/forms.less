@@ -14,26 +14,51 @@ form {
 		padding: 5px;
 	}
 
+	select {
+		&.block {
+			width: 100%;
+		}
+	}
+
 	input {
 		width: 100%;
 	}
 
-	input[type="submit"]{
-		background-color: @blue;
+	input[type="button"], input[type="submit"]{
 		// border-radius: 5px;
-		border: none;
-		color: @white;
 		float: right;
 		font-weight: bold;
 		padding: 5px 15px;
 		width: auto;
 
+		&.overlay {
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
+	}
+
+	input[type="button"] {
+		background-color: @white;
+		border: solid 1px @text;
+		color: lighten(@text, 25%);
+
+		&:hover, &:active {
+			color: @text;
+		}
+	}
+
+	input[type="submit"]{
+		background-color: @blue;
+		border: solid 1px @blue;
+		color: @white;
+		
 		&:hover, &:active {
 			background-color: lighten(@blue, 10%);
 		}
 	}
 
-	div.inline {
+	div.row {
 		.clearfix;
 		margin-bottom: 15px;
 		overflow: visible;
@@ -43,30 +68,15 @@ form {
 			margin-bottom: 0;
 		}
 
-		input[value="listen"] {
-			position: absolute;
-			float: none;
-			top: 0;
-			right: 0;
-		}
-
 		input[type="url"] {
-			padding-right: 29%;
+			padding-right: 88px;
 		}
 
 		input[type="submit"]{
 			float: right;
-
-			&.overlay {
-				position: absolute;
-				float: none;
-				top: 0;
-				right: 0;
-				padding: 6px 15px;
-			}
 		}
 
-		span.column {
+		div.column {
 			display: block;
 			float: left;
 			margin-right: 2%;

@@ -11,9 +11,9 @@ $(document).ready(function(){
 		
 	});
 
-	$('.key').on('click', function(e){
+	$('.padlock').on('click', function(e){
 		e.preventDefault();
-		$(this).closest('section').toggleClass('lock').toggleClass('unlock');
+		$(this).closest('section').toggleClass('locked').toggleClass('unlocked');
 	});
 
 	// $('.lock').toggleClass('lock').toggleClass('unlock');

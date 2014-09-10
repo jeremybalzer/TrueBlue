@@ -13,19 +13,24 @@ header {
 		width: auto;
 	}
 
-	div {
+	.wrapper > div {
 		color: @blue;
 		font-size: 14px;
-		margin-top: 30px;
+		float: right;
 		padding-bottom: 2px;
 
-		&.location {
+		span {
+			display: block;
+			margin-top: 30px;
+		}
+
+		.location {
 			color: @white;
 			font-weight: bold;
 			margin-top: 0px;
 		}
 
-		&.location ~ div {
+		.location ~ span {
 			margin-top: 0px;
 		}
 	}

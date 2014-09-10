@@ -11,12 +11,13 @@ html, body {
 
 .container {
 	min-height: 100%;
+	min-width: 320px;
 	position: relative;
 }
 
 main {
 	box-sizing: border-box;
-	padding: 10px 10px 70px 10px;
+	padding-bottom: 60px;
 	overflow: auto;
 	width: 100%;
 }
@@ -25,15 +26,32 @@ section {
 	box-sizing: border-box;
 	border-bottom: solid 1px @blue;
 	padding: 25px 0 40px 0;
-	margin-right: auto;
-	margin-left: auto;
-	max-width: 500px;
-	overflow: visible;
-	position: relative;
+	// margin-right: auto;
+	// margin-left: auto;
+	// max-width: 540px;
+	// overflow: visible;
+	// position: relative;
 	width: 100%;
 	.clearfix;
 
 	&:last-of-type {
 		border-bottom: none;
+	}
+}
+
+.wrapper {
+	box-sizing: border-box;
+	max-width: 540px;
+	margin-right: auto;
+	margin-left: auto;
+	overflow: visible;
+	padding: 10px;
+	position: relative;
+	.clearfix;
+}
+
+header, footer {
+	.wrapper {
+		max-width: 768px;
 	}
 }
