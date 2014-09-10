@@ -28,9 +28,27 @@
                     <p>Enter the full web address (including http://) of the MP3 file to use for this greeting.</p>
                     <form>
                         <div class="inline">
-                            <input type="submit" value="Listen">
                             <input type="url" placeholder="web address of the mp3">
+                            <input class="overlay" type="submit" value="Listen">
                         </div>
+                    </form>
+                    <div class="padlock">
+                        <a href="#" class="key"></a>
+                    </div>
+                </section>
+
+                <section class="lock">
+                    <h1>Time Zone</h1>
+                    <p>Select the proper time zone for this branch's location</p>
+                    <form>
+                        <select>
+                            <option>Time Zone</option>
+                            <option>Time Zone</option>
+                            <option>Time Zone</option>
+                            <option>Time Zone</option>
+                            <option>Time Zone</option>
+                            <option>Time Zone</option>
+                        </select>
                     </form>
                     <div class="padlock">
                         <a href="#" class="key"></a>
@@ -41,6 +59,76 @@
                     <h1>Open Hours</h1>
                     <p>Set the IVR to use the Open Hours flow during the following times:</p>
                     <form>
+                        <div class="inline">
+                            <span class="column">
+                                <label>From:</label>
+                                <select class="12-hour">
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                </select>
+                                <select class="am-pm">
+                                    <option value="am">AM</option>
+                                    <option value="pm">PM</option>
+                                </select>
+                            </span>
+                            <span class="column">
+                                <label>To:</label>
+                                <select class="12-hour">
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                </select>
+                                <select class="am-pm">
+                                    <option value="am">AM</option>
+                                    <option value="pm">PM</option>
+                                </select>
+                            </span>
+                        </div>
+                        <input type="submit" value="Update">
+                    </form>
+                    <div class="padlock">
+                        <a href="#" class="key"></a>
+                    </div>
+                </section>
+
+                <section class="lock">
+                    <h1>Temporary Open Hours</h1>
+                    <p>Set the IVR to use the Open Hours flow on the following day and times:</p>
+                    <form>
+                        <label>Which day:</label>
+                        <input type="text" placeholder="mm/dd/yyyy">
+                        <div class="inline">
+                            <span class="column">
+                                <label>From:</label>
+                                <select class="12-hour">
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                </select>
+                                <select class="am-pm">
+                                    <option value="am">AM</option>
+                                    <option value="pm">PM</option>
+                                </select>
+                            </span>
+                            <span class="column">
+                                <label>To:</label>
+                                <select class="12-hour">
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                    <option value="time">Time</option>
+                                </select>
+                                <select class="am-pm">
+                                    <option value="am">AM</option>
+                                    <option value="pm">PM</option>
+                                </select>
+                            </span>
+                        </div>
+                        <input type="submit" value="Update">
                     </form>
                     <div class="padlock">
                         <a href="#" class="key"></a>
@@ -52,10 +140,11 @@
                     <p>Enter the phone numbers of those who should receive voicemail notifications (separated with commas)</p>
                     <form>
                         <input type="text" placeholder="phone numbers">
+                        <input type="Submit" value="Update">
                     </form>
                     <div class="accordion">
                         <a href="#" class="accordion-toggle">
-                            Click to see who is already on the call <span class="arrow down"></span>
+                            See who is already on the call <span class="arrow down"></span>
                         </a>
                         <ul class="accordion-body">
                             <li>720-891-3780</li>
@@ -74,7 +163,7 @@
                     <h1>Transfer Number</h1>
                     <p>What number should be used when the branch is unable to take calls?</p>
                     <form>
-                        <input type="text" placeholder="tranfer phone number">
+                        <input type="text" placeholder="transfer phone number">
                         <input type="submit" value="Update">
                     </form>
                     <div class="padlock">
@@ -82,22 +171,7 @@
                     </div>
                 </section>
 
-                <section class="lock">
-                    <h1>Temporary Open Hours</h1>
-                    <p>Set the IVR to use the Open Hours flow on the following day and times:</p>
-                    <form>
-                        <label>Which day:</label>
-                        <input type="text" placeholder="mm/dd/yyyy">
-                        <label>From</label>
-                        <input type="text">
-                        <label>To:</label>
-                        <input type="text">
-                        <input type="submit" value="Update">
-                    </form>
-                    <div class="padlock">
-                        <a href="#" class="key"></a>
-                    </div>
-                </section>
+                
             </main>
 
             <footer role="contentinfo">

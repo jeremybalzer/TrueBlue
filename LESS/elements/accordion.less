@@ -14,19 +14,15 @@
 	}
 
 	.accordion-body {
-		max-height: 0px;
-		overflow: hidden;
-		.transition(all .75s cubic-bezier(0, 1, 0.5, 1));
-
-		&.open {
-			height: auto;
-			max-height: 400px;
-			padding: 10px 0;
-			overflow: auto;
-		}	
+		display: none;
+		margin-top: 10px;
 
 		li {
+			color: @text;
+			float: left;
+			font-style: italic;
 			padding: 0 0 5px 0;
+			width: 33%;
 		}
 	}	
 }

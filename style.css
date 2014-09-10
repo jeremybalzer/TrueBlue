@@ -382,7 +382,7 @@ body {
 }
 main {
   box-sizing: border-box;
-  padding: 10px 10px 50px 10px;
+  padding: 10px 10px 70px 10px;
   overflow: auto;
   width: 100%;
 }
@@ -393,9 +393,18 @@ section {
   margin-right: auto;
   margin-left: auto;
   max-width: 500px;
-  overflow: auto;
+  overflow: visible;
   position: relative;
   width: 100%;
+  *zoom: 1;
+}
+section:before,
+section:after {
+  content: "";
+  display: table;
+}
+section:after {
+  clear: both;
 }
 section:last-of-type {
   border-bottom: none;
@@ -434,22 +443,15 @@ a {
   top: -2px;
 }
 .accordion .accordion-body {
-  max-height: 0px;
-  overflow: hidden;
-  -moz-transition: all 0.75s cubic-bezier(0, 1, 0.5, 1);
-  -ms-transition: all 0.75s cubic-bezier(0, 1, 0.5, 1);
-  -o-transition: all 0.75s cubic-bezier(0, 1, 0.5, 1);
-  -webkit-transition: all 0.75s cubic-bezier(0, 1, 0.5, 1);
-  transition: all 0.75s cubic-bezier(0, 1, 0.5, 1);
-}
-.accordion .accordion-body.open {
-  height: auto;
-  max-height: 400px;
-  padding: 10px 0;
-  overflow: auto;
+  display: none;
+  margin-top: 10px;
 }
 .accordion .accordion-body li {
+  color: #3f3f3f;
+  float: left;
+  font-style: italic;
   padding: 0 0 5px 0;
+  width: 33%;
 }
 .arrow {
   display: inline-block;
@@ -473,11 +475,20 @@ a {
 .arrow.up {
   border-bottom: solid 6px #00aeef;
 }
-form div.inline input[type="url"] {
-  width: auto;
+form {
+  *zoom: 1;
 }
-form div.inline input[type="submit"] {
-  float: right;
+form:before,
+form:after {
+  content: "";
+  display: table;
+}
+form:after {
+  clear: both;
+}
+form label {
+  display: block;
+  line-height: 26px;
 }
 form input,
 form select {
@@ -492,7 +503,6 @@ form input {
 }
 form input[type="submit"] {
   background-color: #00aeef;
-  border-radius: 5px;
   border: none;
   color: #ffffff;
   float: right;
@@ -504,10 +514,87 @@ form input[type="submit"]:hover,
 form input[type="submit"]:active {
   background-color: #23c3ff;
 }
+form div.inline {
+  *zoom: 1;
+  margin-bottom: 15px;
+  overflow: visible;
+  position: relative;
+}
+form div.inline:before,
+form div.inline:after {
+  content: "";
+  display: table;
+}
+form div.inline:after {
+  clear: both;
+}
+form div.inline input,
+form div.inline select,
+form div.inline .dk-select {
+  margin-bottom: 0;
+}
+form div.inline input[value="listen"] {
+  position: absolute;
+  float: none;
+  top: 0;
+  right: 0;
+}
+form div.inline input[type="url"] {
+  padding-right: 29%;
+}
+form div.inline input[type="submit"] {
+  float: right;
+}
+form div.inline input[type="submit"].overlay {
+  position: absolute;
+  float: none;
+  top: 0;
+  right: 0;
+  padding: 6px 15px;
+}
+form div.inline span.column {
+  display: block;
+  float: left;
+  margin-right: 2%;
+  position: relative;
+  overflow: visible;
+  width: 48%;
+}
+form div.inline span.column:nth-of-type(even) {
+  margin-left: 2%;
+  margin-right: 0%;
+}
+form div.inline span.column:nth-of-type(even) .dk-select {
+  float: right;
+}
+form div.inline span.column .dk-select {
+  width: 100%;
+}
+form div.inline span.column .am-pm {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 35px;
+  z-index: 10;
+}
+form div.inline span.column .am-pm .dk-selected {
+  background-color: #00aeef;
+  color: #ffffff;
+  text-align: center;
+  padding: 0 3px;
+}
+form div.inline span.column .am-pm .dk-selected:after,
+form div.inline span.column .am-pm .dk-selected:before {
+  content: none;
+}
+form div.inline span.column select.am-pm {
+  display: none;
+}
 section .padlock {
   position: absolute;
-  left: 0px;
-  bottom: 0px;
+  top: 0px;
+  right: 0px;
   z-index: 10;
 }
 section .key {
@@ -518,8 +605,8 @@ section .key {
   width: 35px;
   height: 23px;
   position: absolute;
-  bottom: 10px;
-  left: 0px;
+  top: 25px;
+  right: 0px;
 }
 section.lock {
   opacity: .7;
