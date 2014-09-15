@@ -6,7 +6,7 @@ form {
 		line-height: 26px;
 	}
 
-	input, select {
+	input, select, textarea {
 		border: solid 1px @text;
 		box-sizing: border-box;
 		display: block;
@@ -16,7 +16,7 @@ form {
 
 	select {
 		max-width: 100%;
-		
+
 		&.block {
 			width: 100%;
 		}
@@ -59,6 +59,11 @@ form {
 		&:hover, &:active {
 			background-color: lighten(@blue, 10%);
 		}
+	}
+
+	textarea {
+		box-shadow: 2px 2px 1px @white;
+		width: 100%;
 	}
 
 	div.row {
