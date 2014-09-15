@@ -15,12 +15,15 @@ form {
 	}
 
 	select {
+		max-width: 100%;
+		
 		&.block {
 			width: 100%;
 		}
 	}
 
 	input {
+		-webkit-appearance: none;
 		width: 100%;
 	}
 
@@ -88,6 +91,9 @@ form {
 				margin-left: 2%;
 				margin-right: 0%;
 
+				.onoffswitch {
+					float: right;
+				}
 				.dk-select {
 					float: right;
 				}
@@ -97,27 +103,27 @@ form {
 				width: 100%;
 			}
 
-			.am-pm {
-				.dk-selected {
-					background-color: @blue;
-					color: @white;
-					text-align: center;
-					padding: 0 3px;
-				}
-				.dk-selected:after, .dk-selected:before {
-					content: none;
-				}
-				display: block;
-				position: absolute;
-				bottom: 0;
-				right: 0;
-				width: 35px;
-				z-index: 10;
-			}
+			// .am-pm {
+			// 	.dk-selected {
+			// 		background-color: @blue;
+			// 		color: @white;
+			// 		text-align: center;
+			// 		padding: 0 3px;
+			// 	}
+			// 	.dk-selected:after, .dk-selected:before {
+			// 		content: none;
+			// 	}
+			// 	display: block;
+			// 	position: absolute;
+			// 	bottom: 0;
+			// 	right: 0;
+			// 	width: 35px;
+			// 	z-index: 10;
+			// }
 
-			select.am-pm {
-				display: none;
-			}
+			// select.am-pm {
+			// 	display: none;
+			// }
 		}
 	}
 }

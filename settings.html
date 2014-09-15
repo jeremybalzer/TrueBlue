@@ -27,7 +27,7 @@
           <div class="wrapper">
             <h1>Record Audio</h1>
 
-            <form action="" name="mp3">
+            <form action="" method="" action="" name="mp3">
               <select>
                 <option>Option</option>
                 <option>Option</option>
@@ -54,7 +54,7 @@
           <div class="wrapper">
             <h1>Time Zone</h1>
             <p>Select the proper time zone for this branch's location</p>
-            <form>
+            <form action="" method="">
               <select class="block">
                 <option>Time Zone</option>
                 <option>Time Zone</option>
@@ -76,34 +76,38 @@
           <div class="wrapper">
             <h1>Open Hours</h1>
             <p>Set the IVR to use the Open Hours flow during the following times:</p>
-            <form>
+            <form action="" method="">
               <div class="row">
                 <div class="column">
                   <label for="from">From:</label>
-                  <select class="12-hour" name="from">
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
+                  <select class="12-hour block" name="from">
+                    <!-- Main.js populates values -->
                   </select>
-                  <select class="am-pm">
-                    <option value="am">AM</option>
-                    <option value="pm">PM</option>
-                  </select>
+                  
+                  <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-1" checked>
+                    <label class="onoffswitch-label" for="myonoffswitch-1">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
+
                 </div>
                 <div class="column">
                   <label for="to">To:</label>
                   
-                  <select class="12-hour" name="to">
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
+                  <select class="12-hour block" name="to">
+                    <!-- Main.js populates values -->
                   </select>
-                  <select class="am-pm">
-                    <option value="am">AM</option>
-                    <option value="pm">PM</option>
-                  </select>
+                  
+                  <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-2" checked>
+                    <label class="onoffswitch-label" for="myonoffswitch-2">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
+
                 </div>
               </div>
               <input type="submit" value="Update">
@@ -119,36 +123,36 @@
           <div class="wrapper">
             <h1>Temporary Open Hours</h1>
             <p>Set the IVR to use the Open Hours flow on the following day and times:</p>
-            <form>
+            <form action="" method="">
               <label>Which day:</label>
-              <input type="date">
+              <input class="datepicker" type="text" placeholder="mm/dd/yyyy" readonly>
 
               <div class="row">
                 <div class="column">
                   <label for="from">From:</label>
-                  <select class="12-hour" name="from">
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
+                  <select class="12-hour block" name="from">
+                    <!-- Main.js populates values -->
                   </select>
-                  <select class="am-pm">
-                    <option value="am">AM</option>
-                    <option value="pm">PM</option>
-                  </select>
+                  <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-3" checked>
+                    <label class="onoffswitch-label" for="myonoffswitch-3">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
                 </div>
                 <div class="column">
-                  <label for="to">To:</label>
-                  <select class="12-hour" name="to">
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
+                  <label for="from">From:</label>
+                  <select class="12-hour block" name="from">
+                    <!-- Main.js populates values -->
                   </select>
-                  <select class="am-pm">
-                    <option value="am">AM</option>
-                    <option value="pm">PM</option>
-                  </select>
+                  <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-4" checked>
+                    <label class="onoffswitch-label" for="myonoffswitch-4">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
                 </div>
               </div>
               <input type="submit" value="Update">
@@ -164,7 +168,7 @@
           <div class="wrapper">
             <h1>Who is on the call?</h1>
             <p>Enter the phone numbers of those who should receive voicemail notifications (separated with commas)</p>
-            <form action="" name="">
+            <form action="" method="" action="" name="">
               <input type="text" placeholder="phone numbers">
               <input type="Submit" value="Update">
             </form>
@@ -189,7 +193,7 @@
           <div class="wrapper">
             <h1>Transfer Number</h1>
             <p>What number should be used when the branch is unable to take calls?</p>
-            <form>
+            <form action="" method="">
               <input type="text" placeholder="transfer phone number">
               <input type="submit" value="Update">
             </form>
@@ -208,9 +212,6 @@
 
     </div>
 
-    <script src="js/jquery.js"></script>
-    <script src="js/dropkick.js" defer></script>
-    <script src="js/dropkick-jquery.js" defer></script>
-    <script src="js/main.js" defer></script>
+    <script src="js/min/main-min.js" defer></script>
   </body>
 </html>

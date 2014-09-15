@@ -21,11 +21,15 @@
                     <div class="wrapper">
                         <h1>Please log in</h1>
                         <p>Use your OneReach credentials to log in and update your IVR settings</p>
-                        <form>
-                            <input type="text" placeholder="username">
-                            <input type="password" placeholder="password">
+                        <form action="https://wapi.dev.onereach.com" method="get">
+                            <input name="username" type="text" placeholder="username">
+                            <input name="password" type="password" placeholder="password">
                             <input type="submit" value="Login">
                         </form>
+                        <!-- Include support number / email  -->
+                        <p>Problems logging in? Contact Us:
+                        <a href="mailto:support@onereach.com">support@onereach.com</a>
+                        <a href="tel:3039747351">(303) 974-7351</a>
                     </div>
                 </section>
             </main>
