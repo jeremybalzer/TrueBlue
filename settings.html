@@ -14,21 +14,42 @@
         <div class="wrapper">
           <img src="img/logo.jpg" alt="Trueblue"/>
           <div>
-            <span class="location">Denver Office</span>
-            <span id="location-phone">720-333-0122</span>
+            <span class="location"></span>
+            <span id="location-phone"></span>
             <span>IVR Settings</span>
           </div>
         </div>
       </header>
 
-      <main role="main">
+      <div id="login-screen" class="main">
+        <!-- Login Screen -->
+        <section class="login">
+            <div class="wrapper">
+                <h1>Please log in</h1>
+                <p>Use your OneReach credentials to log in and update your IVR settings</p>
+                <form>
+                    <input id="username" type="text" placeholder="username">
+                    <input id="password" type="password" placeholder="password">
+                    <input id="login" class="submit" type="button" value="Login">
+                </form>
+                <!-- Include support number / email  -->
+                <p>Problems logging in?</p> 
+                <p>Contact Us:
+                  <a href="mailto:support@onereach.com">support@onereach.com</a> | <a href="tel:3039747351">(303) 974-7351</a>
+                </p>
+                
+            </div>
+        </section>
+      </div>
+
+      <main id="settings" role="main" class="hidden main">
         <!-- Select Audio for the main greeting -->
-        <section class="locked">
+        <!-- <section class="locked">
           <div class="wrapper">
             <h1>Record Audio</h1>
 
             <form action="" method="" action="" name="mp3">
-              <select>
+              <select class="dropkick">
                 <option>Option</option>
                 <option>Option</option>
                 <option>Option</option>
@@ -49,48 +70,23 @@
               <a href="#" class="padlock"></a>
             </div>
           </div>
-        </section>
+        </section> -->
 
         <!-- Set the time zone for this location-->
-        <section class="locked">
+        <section id="time-zone" class="locked">
           <div class="wrapper">
             <h1>Time Zone</h1>
             <p>Select the proper time zone for this branch's location</p>
-            <form action="" method="">
-              <select class="block">
-                <option value="-12.0">(GMT -12:00) Eniwetok, Kwajalein</option>
-                <option value="-11.0">(GMT -11:00) Midway Island, Samoa</option>
-                <option value="-10.0">(GMT -10:00) Hawaii</option>
-                <option value="-9.0">(GMT -9:00) Alaska</option>
-                <option value="-8.0">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
-                <option value="-7.0">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
-                <option value="-6.0">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
-                <option value="-5.0">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
-                <option value="-4.0">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
-                <option value="-3.5">(GMT -3:30) Newfoundland</option>
-                <option value="-3.0">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
-                <option value="-2.0">(GMT -2:00) Mid-Atlantic</option>
-                <option value="-1.0">(GMT -1:00 hour) Azores, Cape Verde Islands</option>
-                <option value="0.0">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
-                <option value="1.0">(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
-                <option value="2.0">(GMT +2:00) Kaliningrad, South Africa</option>
-                <option value="3.0">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
-                <option value="3.5">(GMT +3:30) Tehran</option>
-                <option value="4.0">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
-                <option value="4.5">(GMT +4:30) Kabul</option>
-                <option value="5.0">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
-                <option value="5.5">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
-                <option value="5.75">(GMT +5:45) Kathmandu</option>
-                <option value="6.0">(GMT +6:00) Almaty, Dhaka, Colombo</option>
-                <option value="7.0">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
-                <option value="8.0">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
-                <option value="9.0">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
-                <option value="9.5">(GMT +9:30) Adelaide, Darwin</option>
-                <option value="10.0">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
-                <option value="11.0">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
-                <option value="12.0">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+            <form>
+              <select class="block dropkick">
+                <option value="-5">(GMT -5:00) Eastern Time (US &amp; Canada)</option>
+                <option value="-6">(GMT -6:00) Central Time (US &amp; Canada)</option>
+                <option value="-7">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+                <option value="-8">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+                <option value="-9">(GMT -9:00) Alaska</option>
+                <option value="-10">(GMT -10:00) Hawaii</option>
               </select>
-              <input type="submit" value="Update">
+              <input type="button" class="submit" value="Update">
             </form>
             <div class="screen">
               <a href="#" class="padlock"></a>
@@ -107,7 +103,7 @@
               <div class="row">
                 <div class="column">
                   <label for="from">From:</label>
-                  <select class="12-hour block" name="from">
+                  <select class="12-hour block dropkick" name="from">
                     <!-- Main.js populates values -->
                   </select>
                   
@@ -123,7 +119,7 @@
                 <div class="column">
                   <label for="to">To:</label>
                   
-                  <select class="12-hour block" name="to">
+                  <select class="12-hour block dropkick" name="to">
                     <!-- Main.js populates values -->
                   </select>
                   
@@ -137,7 +133,7 @@
 
                 </div>
               </div>
-              <input type="submit" value="Update">
+              <input type="button" class="submit" value="Update">
             </form>
             <div class="screen">
               <a href="#" class="padlock"></a>
@@ -157,7 +153,7 @@
               <div class="row">
                 <div class="column">
                   <label for="from">From:</label>
-                  <select class="12-hour block" name="from">
+                  <select class="12-hour block dropkick" name="from">
                     <!-- Main.js populates values -->
                   </select>
                   <div class="onoffswitch">
@@ -170,7 +166,7 @@
                 </div>
                 <div class="column">
                   <label for="from">From:</label>
-                  <select class="12-hour block" name="from">
+                  <select class="12-hour block dropkick" name="from">
                     <!-- Main.js populates values -->
                   </select>
                   <div class="onoffswitch">
@@ -182,7 +178,7 @@
                   </div>
                 </div>
               </div>
-              <input type="submit" value="Update">
+              <input type="button" class="submit" value="Update">
             </form>
             <div class="screen">
               <a href="#" class="padlock"></a>
@@ -196,8 +192,8 @@
             <h1>Who is on call?</h1>
             <p>Enter the phone numbers of those who should receive voicemail notifications (10 digit numbers only, separated with commas and no spaces)</p>
             <form action="" method="" action="" name="">
-              <textarea rows="4" placeholder="1111111111, 2222222222"></textarea>
-              <input type="Submit" value="Update">
+              <textarea rows="4" placeholder="1111111111,2222222222,3333333333"></textarea>
+              <input type="button" class="submit" value="Update">
             </form>
             <div class="accordion">
               <a href="#" class="accordion-toggle">See who is already on call <span class="arrow down"></span></a>
@@ -210,7 +206,7 @@
               </ul>
             </div>
             <div class="screen">
-              
+              <a href="#" class="padlock"></a>
             </div>
           </div>
         </section>
@@ -229,7 +225,7 @@
                   <span class="onoffswitch-switch"></span>
                 </label>
               </div>
-              <input type="submit" value="Update">
+              <input type="button" class="submit" value="Update">
             </form>
             <div class="screen">
               <a href="#" class="padlock"></a>
@@ -245,7 +241,6 @@
       </footer>
 
     </div>
-
-    <script src="js/min/main-min.js" defer></script>
+    <script src="js/min/main-min.js"></script>
   </body>
 </html>
