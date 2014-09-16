@@ -53,6 +53,20 @@ $(document).ready(function(){
         $(this).closest('section').toggleClass('locked').toggleClass('unlocked');
     });
 
+    // Toggle the AM/PM Switches
+    $('.onoffswitch-checkbox').on('click', function(){
+        var that = $(this);
+        if(that.attr('data-time') == "am"){
+            that.attr('data-time', 'pm');
+        } else if (that.attr('data-time') == "pm"){
+            that.attr('data-time', 'am');
+        } else if (that.attr('data-boolean') == "on"){
+            that.attr('data-boolean', "off");
+        } else if (that.attr('data-boolean') == "off"){
+            that.attr('data-boolean', "on");
+        }
+    })
+
     // See Who is on a Call
     $('.accordion-toggle').on('click', function(e) {
         e.preventDefault();
@@ -63,6 +77,9 @@ $(document).ready(function(){
 
     // Update TimeZone
     $('#time-zone').find('input.submit').on('click', updateTimezone);
+
+    // Update Open Hours
+    $('#open-hours').find('input.submit').on('click', updateOpenHours);
 
 // ############ Functions ############
 
@@ -182,6 +199,9 @@ $(document).ready(function(){
     }
 
     function updateOpenHours(){
+        var fromAMPM = $('#open-from').find('#myonoffswitch-1');
+        var toAMPM = $('#open-to').find('#myonoffswitch-2');
+        debugger;
         // updateContact();
     };
 
@@ -204,7 +224,4 @@ $(document).ready(function(){
             }
         });
     }
-
-
-
 });
