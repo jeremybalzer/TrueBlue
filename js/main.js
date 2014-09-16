@@ -1,9 +1,12 @@
 var pageData;
+var mobileNum;
 
 $(document).ready(function(){
 
 // ############ Variables ############
     // var pageData, hourInput;
+    var ID;
+    var updateURL = "https://wapi.onereach.com/api/contact";
 
 // ############ Page Configuration ############
     
@@ -50,6 +53,17 @@ $(document).ready(function(){
         $(this).closest('section').toggleClass('locked').toggleClass('unlocked');
     });
 
+    // See Who is on a Call
+    $('.accordion-toggle').on('click', function(e) {
+        e.preventDefault();
+        $(this).find('.arrow').toggleClass('down').toggleClass('up');
+        // $(this).siblings('.accordion-body').toggleClass('open');
+        $(this).siblings('.accordion-body').slideToggle(250);
+    });
+
+    // Update TimeZone
+    $('#time-zone').find('input.submit').on('click', updateTimezone);
+
 // ############ Functions ############
 
     // Log in a user
@@ -69,6 +83,7 @@ $(document).ready(function(){
             success: function(data){
                 // Store the Reponse to run the second login
                 console.log(data);
+                mobileNum = data.User.MobileNumber;
 
                 // Run the second ajax query to get the contact info
                 $.ajax({
@@ -86,7 +101,9 @@ $(document).ready(function(){
                             'TempOpenHoursTo', 
                             'TimeZone', 
                             'TN Backup Needed', 
-                            'TN Backup Phone'
+                            'TN Backup Phone',
+                            'OpenHoursTo',
+                            'OpenHoursFrom'
                         ]
                     }),
                     headers: {
@@ -103,6 +120,7 @@ $(document).ready(function(){
                     success: function(response){
                         pageData = response;
                         console.log(pageData);
+                        ID = pageData.Items[0].Id;
 
                         populateHeader();
                         populateTimezone();
@@ -156,14 +174,36 @@ $(document).ready(function(){
         });
     };
 
-    
+    // Update Time Zone
+    function updateTimezone(){
+        console.log('updating');
+        var newTime = $('#time-zone').find('.dk-option-selected').attr('data-value');
+        updateContact(5, 'TimeZone', newTime);
+    }
 
-    $('.accordion-toggle').on('click', function(e) {
-        e.preventDefault();
-        $(this).find('.arrow').toggleClass('down').toggleClass('up');
-        // $(this).siblings('.accordion-body').toggleClass('open');
-        $(this).siblings('.accordion-body').slideToggle(250);
-    });
+    function updateOpenHours(){
+        // updateContact();
+    };
+
+    function updateContact(index, record, value){
+        $.ajax({
+            url: "https://wapi.onereach.com/api/contact/" + ID,
+            type: "PUT",
+            data: JSON.stringify([
+                {Name: record, Value: value}                    
+            ]),
+            headers: {
+                username: "contact@trueblue.com",
+                password: mobileNum
+            }, 
+            error: function(data, err, msg) {
+                console.log(msg);
+            },
+            success: function(data){
+                console.log(data);
+            }
+        });
+    }
 
 
 

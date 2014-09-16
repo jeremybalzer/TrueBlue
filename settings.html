@@ -95,13 +95,13 @@
         </section>
 
         <!-- Set the IVR's Open Hours Flow for these times  -->
-        <section class="locked">
+        <section id="open-hours" class="locked">
           <div class="wrapper">
             <h1>Open Hours</h1>
             <p>Set the IVR to use the Open Hours flow during the following times:</p>
-            <form action="" method="">
+            <form>
               <div class="row">
-                <div class="column">
+                <div id="open-from" class="column">
                   <label for="from">From:</label>
                   <select class="12-hour block dropkick" name="from">
                     <!-- Main.js populates values -->
@@ -116,7 +116,7 @@
                   </div>
 
                 </div>
-                <div class="column">
+                <div id ="open-to"class="column">
                   <label for="to">To:</label>
                   
                   <select class="12-hour block dropkick" name="to">
