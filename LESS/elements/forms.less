@@ -6,7 +6,7 @@ form {
 		line-height: 26px;
 	}
 
-	input, select {
+	input, select, textarea {
 		border: solid 1px @text;
 		box-sizing: border-box;
 		display: block;
@@ -15,12 +15,15 @@ form {
 	}
 
 	select {
+		max-width: 100%;
+
 		&.block {
 			width: 100%;
 		}
 	}
 
 	input {
+		-webkit-appearance: none;
 		width: 100%;
 	}
 
@@ -48,7 +51,7 @@ form {
 		}
 	}
 
-	input[type="submit"]{
+	input.submit{
 		background-color: @blue;
 		border: solid 1px @blue;
 		color: @white;
@@ -56,6 +59,11 @@ form {
 		&:hover, &:active {
 			background-color: lighten(@blue, 10%);
 		}
+	}
+
+	textarea {
+		box-shadow: 2px 2px 1px @white;
+		width: 100%;
 	}
 
 	div.row {
@@ -88,6 +96,9 @@ form {
 				margin-left: 2%;
 				margin-right: 0%;
 
+				.onoffswitch {
+					float: right;
+				}
 				.dk-select {
 					float: right;
 				}
@@ -97,27 +108,27 @@ form {
 				width: 100%;
 			}
 
-			.am-pm {
-				.dk-selected {
-					background-color: @blue;
-					color: @white;
-					text-align: center;
-					padding: 0 3px;
-				}
-				.dk-selected:after, .dk-selected:before {
-					content: none;
-				}
-				display: block;
-				position: absolute;
-				bottom: 0;
-				right: 0;
-				width: 35px;
-				z-index: 10;
-			}
+			// .am-pm {
+			// 	.dk-selected {
+			// 		background-color: @blue;
+			// 		color: @white;
+			// 		text-align: center;
+			// 		padding: 0 3px;
+			// 	}
+			// 	.dk-selected:after, .dk-selected:before {
+			// 		content: none;
+			// 	}
+			// 	display: block;
+			// 	position: absolute;
+			// 	bottom: 0;
+			// 	right: 0;
+			// 	width: 35px;
+			// 	z-index: 10;
+			// }
 
-			select.am-pm {
-				display: none;
-			}
+			// select.am-pm {
+			// 	display: none;
+			// }
 		}
 	}
 }

@@ -14,21 +14,42 @@
         <div class="wrapper">
           <img src="img/logo.jpg" alt="Trueblue"/>
           <div>
-            <span class="location">Denver Office</span>
-            <span id="location-phone">720-333-0122</span>
+            <span class="location"></span>
+            <span id="location-phone"></span>
             <span>IVR Settings</span>
           </div>
         </div>
       </header>
 
-      <main role="main">
+      <div id="login-screen" class="main hidden">
+        <!-- Login Screen -->
+        <section class="login">
+            <div class="wrapper">
+                <h1>Please log in</h1>
+                <p>Use your OneReach credentials to log in and update your IVR settings</p>
+                <form>
+                    <input id="username" type="text" placeholder="username">
+                    <input id="password" type="password" placeholder="password">
+                    <input id="login" class="submit" type="button" value="Login">
+                </form>
+                <!-- Include support number / email  -->
+                <p>Problems logging in?</p> 
+                <p>Contact Us:
+                  <a href="mailto:support@onereach.com">support@onereach.com</a> | <a href="tel:3039747351">(303) 974-7351</a>
+                </p>
+                
+            </div>
+        </section>
+      </div>
+
+      <main id="settings" role="main" class="main">
         <!-- Select Audio for the main greeting -->
-        <section class="locked">
+        <!-- <section class="locked">
           <div class="wrapper">
             <h1>Record Audio</h1>
 
-            <form action="" name="mp3">
-              <select>
+            <form action="" method="" action="" name="mp3">
+              <select class="dropkick">
                 <option>Option</option>
                 <option>Option</option>
                 <option>Option</option>
@@ -43,27 +64,29 @@
               </div>
             </form>
 
+            <p class="error">This is how validation error notices will look</p>
+
             <div class="screen">
               <a href="#" class="padlock"></a>
             </div>
           </div>
-        </section>
+        </section> -->
 
         <!-- Set the time zone for this location-->
-        <section class="locked">
+        <section id="time-zone" class="locked">
           <div class="wrapper">
             <h1>Time Zone</h1>
             <p>Select the proper time zone for this branch's location</p>
             <form>
-              <select class="block">
-                <option>Time Zone</option>
-                <option>Time Zone</option>
-                <option>Time Zone</option>
-                <option>Time Zone</option>
-                <option>Time Zone</option>
-                <option>Time Zone</option>
+              <select class="block dropkick">
+                <option value="-5">(GMT -5:00) Eastern Time (US &amp; Canada)</option>
+                <option value="-6">(GMT -6:00) Central Time (US &amp; Canada)</option>
+                <option value="-7">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+                <option value="-8">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+                <option value="-9">(GMT -9:00) Alaska</option>
+                <option value="-10">(GMT -10:00) Hawaii</option>
               </select>
-              <input type="submit" value="Update">
+              <input type="button" class="submit" value="Update">
             </form>
             <div class="screen">
               <a href="#" class="padlock"></a>
@@ -72,41 +95,45 @@
         </section>
 
         <!-- Set the IVR's Open Hours Flow for these times  -->
-        <section class="locked">
+        <section id="open-hours" class="locked">
           <div class="wrapper">
             <h1>Open Hours</h1>
             <p>Set the IVR to use the Open Hours flow during the following times:</p>
             <form>
               <div class="row">
-                <div class="column">
+                <div id="open-from" class="column">
                   <label for="from">From:</label>
-                  <select class="12-hour" name="from">
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
+                  <select class="12-hour block dropkick" name="from">
+                    <!-- Main.js populates values -->
                   </select>
-                  <select class="am-pm">
-                    <option value="am">AM</option>
-                    <option value="pm">PM</option>
-                  </select>
+                  
+                  <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-1" data-time="am" checked>
+                    <label class="onoffswitch-label" for="myonoffswitch-1">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
+
                 </div>
-                <div class="column">
+                <div id ="open-to"class="column">
                   <label for="to">To:</label>
                   
-                  <select class="12-hour" name="to">
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
+                  <select class="12-hour block dropkick" name="to">
+                    <!-- Main.js populates values -->
                   </select>
-                  <select class="am-pm">
-                    <option value="am">AM</option>
-                    <option value="pm">PM</option>
-                  </select>
+                  
+                  <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-2" data-time="am" checked>
+                    <label class="onoffswitch-label" for="myonoffswitch-2">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
+
                 </div>
               </div>
-              <input type="submit" value="Update">
+              <input type="button" class="submit" value="Update">
             </form>
             <div class="screen">
               <a href="#" class="padlock"></a>
@@ -119,39 +146,39 @@
           <div class="wrapper">
             <h1>Temporary Open Hours</h1>
             <p>Set the IVR to use the Open Hours flow on the following day and times:</p>
-            <form>
+            <form action="" method="">
               <label>Which day:</label>
-              <input type="date">
+              <input class="datepicker" type="text" placeholder="mm/dd/yyyy" readonly>
 
               <div class="row">
                 <div class="column">
                   <label for="from">From:</label>
-                  <select class="12-hour" name="from">
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
+                  <select class="12-hour block dropkick" name="from">
+                    <!-- Main.js populates values -->
                   </select>
-                  <select class="am-pm">
-                    <option value="am">AM</option>
-                    <option value="pm">PM</option>
-                  </select>
+                  <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-3" data-time="am" checked>
+                    <label class="onoffswitch-label" for="myonoffswitch-3">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
                 </div>
                 <div class="column">
-                  <label for="to">To:</label>
-                  <select class="12-hour" name="to">
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
-                    <option value="time">Time</option>
+                  <label for="from">From:</label>
+                  <select class="12-hour block dropkick" name="from">
+                    <!-- Main.js populates values -->
                   </select>
-                  <select class="am-pm">
-                    <option value="am">AM</option>
-                    <option value="pm">PM</option>
-                  </select>
+                  <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-4" data-time="am" checked>
+                    <label class="onoffswitch-label" for="myonoffswitch-4">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
                 </div>
               </div>
-              <input type="submit" value="Update">
+              <input type="button" class="submit" value="Update">
             </form>
             <div class="screen">
               <a href="#" class="padlock"></a>
@@ -162,14 +189,14 @@
         <!-- Configure voicemail notifications -->
         <section class="locked">
           <div class="wrapper">
-            <h1>Who is on the call?</h1>
-            <p>Enter the phone numbers of those who should receive voicemail notifications (separated with commas)</p>
-            <form action="" name="">
-              <input type="text" placeholder="phone numbers">
-              <input type="Submit" value="Update">
+            <h1>Who is on call?</h1>
+            <p>Enter the phone numbers of those who should receive voicemail notifications (10 digit numbers only, separated with commas and no spaces)</p>
+            <form action="" method="" action="" name="">
+              <textarea rows="4" placeholder="1111111111,2222222222,3333333333"></textarea>
+              <input type="button" class="submit" value="Update">
             </form>
             <div class="accordion">
-              <a href="#" class="accordion-toggle">See who is already on the call <span class="arrow down"></span></a>
+              <a href="#" class="accordion-toggle">See who is already on call <span class="arrow down"></span></a>
               <ul class="accordion-body">
                 <li>720-891-3780</li>
                 <li>720-891-3780</li>
@@ -189,9 +216,16 @@
           <div class="wrapper">
             <h1>Transfer Number</h1>
             <p>What number should be used when the branch is unable to take calls?</p>
-            <form>
+            <form action="" method="">
               <input type="text" placeholder="transfer phone number">
-              <input type="submit" value="Update">
+              <div id="onoff" class="onoffswitch">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-boolean="on" id="myonoffswitch-5">
+                <label class="onoffswitch-label" for="myonoffswitch-5">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+              <input type="button" class="submit" value="Update">
             </form>
             <div class="screen">
               <a href="#" class="padlock"></a>
@@ -207,10 +241,6 @@
       </footer>
 
     </div>
-
-    <script src="js/jquery.js"></script>
-    <script src="js/dropkick.js" defer></script>
-    <script src="js/dropkick-jquery.js" defer></script>
-    <script src="js/main.js" defer></script>
+    <script src="js/min/main-min.js"></script>
   </body>
 </html>
