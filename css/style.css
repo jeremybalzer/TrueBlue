@@ -793,10 +793,8 @@ p.message {
   font-size: 14px;
   font-style: italic;
   margin-bottom: 0px;
-  padding-right: 5px;
   position: absolute;
-  bottom: 10px;
-  max-width: 350px;
+  bottom: 20px;
 }
 a {
   color: #00aeef;

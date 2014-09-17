@@ -81,6 +81,9 @@ $(document).ready(function(){
     // Update Open Hours
     $('#open-hours').find('input.submit').on('click', updateOpenHours);
 
+    // Update Transfer Number
+    $('#transfer-number').find('input.submit').on('click', updateTransferNumber);
+
 // ############ Functions ############
 
     // Log in a user
@@ -136,12 +139,13 @@ $(document).ready(function(){
                     },
                     success: function(response){
                         pageData = response;
-                        console.log(pageData);
+                        console.log(pageData.Items[0].Data);
                         ID = pageData.Items[0].Id;
 
                         populateHeader();
                         populateTimezone();
                         populateOpenHours();
+                        populateTransferNumber();
 
 
                         function populateHeader(){
@@ -153,7 +157,8 @@ $(document).ready(function(){
                                 data.User.MobileNumber.slice(6,10)
                             );
                         };
-                            
+                          
+                        // Configure the Time Zone to match the record  
                         function populateTimezone(){
                             //Populate the Time Zone
                             var TZ = pageData.Items[0].Data[4].Value;
@@ -182,9 +187,29 @@ $(document).ready(function(){
                             }); 
                         }
 
+                        // Configure the Open Hours to match the record
                         function populateOpenHours(){
 
                         };
+
+                        // Configure the Temp Hours to match the record
+                        function populateTempHours(){
+
+                        }
+
+                        // Configure the Transfer Number to match the record
+                        function populateTransferNumber(){
+                            var status = pageData.Items[0].Data[2].Value; 
+                            if(status != ""){
+                                $('#myonoffswitch-5').attr('data-boolean', status);
+
+                                // If Status is 'On', toggle the switch
+                                if(status == "on"){
+                                    $('#myonoffswitch-5').click()
+                                }
+                            }
+                            $('#update-number').attr('placeholder', 'Current: ' + pageData.Items[0].Data[3].Value);
+                        }
                     }
                 });
             }
@@ -193,16 +218,57 @@ $(document).ready(function(){
 
     // Update Time Zone
     function updateTimezone(){
+        context = $('#time-zone');
         console.log('updating');
         var newTime = $('#time-zone').find('.dk-option-selected').attr('data-value');
         updateContact(5, 'TimeZone', newTime);
+        displayMsg(context, 'Update Successful', false);
+    }
+
+    function updateTransferNumber(){
+        var context = $('#transfer-number');
+        var newNumber = $('#update-number').val();
+        var backup = $('#myonoffswitch-5').attr('data-boolean');
+        
+        var isTenDigits = validateNumber(newNumber)
+
+        // If no new number is provided, update the Backup Needed Status
+        if(newNumber == ""){
+            updateContact(2, 'TN Backup Needed', backup);
+            displayMsg(context, 'Update Successful', false);
+        } else {
+            if(isTenDigits == -1){
+                displayMsg(context, 'Please enter a valid ten digit number', true);
+            } else {
+                updateContact(4, 'TN Backup Phone', newNumber);
+                updateContact(2, 'TN Backup Needed', backup);
+                displayMsg(context, 'Update Successful', false);
+            }
+        }    
     }
 
     function updateOpenHours(){
-        var fromAMPM = $('#open-from').find('#myonoffswitch-1');
-        var toAMPM = $('#open-to').find('#myonoffswitch-2');
-        debugger;
-        // updateContact();
+        var context = $('#open-hours');
+        var fromHour = $('#open-from').find('.dk-option-selected').attr('data-value').replace(':', '');;
+        var fromAMPM = $('#open-from').find('#myonoffswitch-1').attr('data-time');
+        var toHour = $('#open-to').find('.dk-option-selected').attr('data-value').replace(':', '');;
+        var toAMPM = $('#open-to').find('#myonoffswitch-2').attr('data-time');;
+
+        // console.log(fromHour);
+        // console.log(toHour);
+
+        if(toAMPM == 'pm' && fromAMPM == "am"){
+            displayMsg(context, 'Update Successful', false);
+        } else if (toAMPM == fromAMPM && fromHour < toHour){
+            displayMsg(context, 'Update Successful', false);
+        } else if(toAMPM == fromAMPM && fromHour == toHour){
+            displayMsg(context, 'Error: The end time must be later than the start time', true);
+        } else {
+            displayMsg(context, "Error: Closing hour can not be before opening hour", true);
+        }
+        // if()
+        // updateContact(3, 'OpenHoursFrom', fromHour + fromAMPM);
+        // updateContact(4, 'OpenHoursTo', toHour + toAMPM);
     };
 
     function updateContact(index, record, value){
@@ -224,4 +290,57 @@ $(document).ready(function(){
             }
         });
     }
+
+    function displayMsg(context, msg, isError){
+        var color;
+
+        if(isError == true) {
+            // Error Messages get left on screen
+            color = "#ff0000";
+        } else {
+            color = "#00AEEF";
+            // Hide a successful message after it updates
+            setTimeout(function(){
+               context.find('.message').fadeOut(300);
+            }, 2500);
+        }
+        context.find('.message').html(msg).show().css('color', color);
+    }
+
+    function validateNumber(number){
+        numArray = number.toString().split("");
+        if(numArray.length != 10) {
+            console.log('Array Length is: ' + numArray.length);
+            return -1;
+        } else {
+            arrayTest = [];
+
+            // Evaluate each value to see if it's a number
+            $.each(numArray, function(index, value){
+                value = isNaN(value);
+                if(value == true){
+                    arrayTest.push(true)
+                } else {
+                    arrayTest.push(false);
+                }
+            });
+
+            // any of the values aren't a number return a flag
+            if(
+                arrayTest[0] == true ||
+                arrayTest[1] == true ||
+                arrayTest[2] == true ||
+                arrayTest[3] == true ||
+                arrayTest[4] == true ||
+                arrayTest[5] == true ||
+                arrayTest[6] == true ||
+                arrayTest[7] == true ||
+                arrayTest[8] == true ||
+                arrayTest[9] == true 
+            ){
+                return -1;
+            }
+        }
+    };
+
 });

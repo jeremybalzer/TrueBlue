@@ -21,7 +21,7 @@
         </div>
       </header>
 
-      <div id="login-screen" class="main hidden">
+      <div id="login-screen" class="main">
         <!-- Login Screen -->
         <section class="login">
             <div class="wrapper">
@@ -42,7 +42,7 @@
         </section>
       </div>
 
-      <main id="settings" role="main" class="main">
+      <main id="settings" role="main" class="main hidden">
         <!-- Select Audio for the main greeting -->
         <!-- <section class="locked">
           <div class="wrapper">
@@ -64,7 +64,7 @@
               </div>
             </form>
 
-            <p class="error">This is how validation error notices will look</p>
+            <p class="message">This is how validation error notices will look</p>
 
             <div class="screen">
               <a href="#" class="padlock"></a>
@@ -88,6 +88,7 @@
               </select>
               <input type="button" class="submit" value="Update">
             </form>
+            <p class="message"></p>
             <div class="screen">
               <a href="#" class="padlock"></a>
             </div>
@@ -98,7 +99,7 @@
         <section id="open-hours" class="locked">
           <div class="wrapper">
             <h1>Open Hours</h1>
-            <p>Set the IVR to use the Open Hours flow during the following times:</p>
+            <p>Set the IVR to use the Open Hours flow during the following time:</p>
             <form>
               <div class="row">
                 <div id="open-from" class="column">
@@ -135,6 +136,9 @@
               </div>
               <input type="button" class="submit" value="Update">
             </form>
+
+            <p class="message"></p>
+
             <div class="screen">
               <a href="#" class="padlock"></a>
             </div>
@@ -212,14 +216,14 @@
         </section>
 
         <!-- Set a transfer number -->
-        <section class="locked">
+        <section id="transfer-number" class="locked">
           <div class="wrapper">
             <h1>Transfer Number</h1>
-            <p>What number should be used when the branch is unable to take calls?</p>
-            <form action="" method="">
-              <input type="text" placeholder="transfer phone number">
+            <p>What number should be used when the branch is unable to take calls? (10 digit numbers only, separated with commas and no spaces)</p>
+            <form>
+              <input id="update-number" type="text" placeholder="9999999999">
               <div id="onoff" class="onoffswitch">
-                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-boolean="on" id="myonoffswitch-5">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-boolean="off" id="myonoffswitch-5">
                 <label class="onoffswitch-label" for="myonoffswitch-5">
                   <span class="onoffswitch-inner"></span>
                   <span class="onoffswitch-switch"></span>
@@ -227,6 +231,7 @@
               </div>
               <input type="button" class="submit" value="Update">
             </form>
+            <p class="message"></p>
             <div class="screen">
               <a href="#" class="padlock"></a>
             </div>
