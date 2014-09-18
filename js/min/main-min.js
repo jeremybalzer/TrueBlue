@@ -1898,10 +1898,7 @@ $(document).ready(function(){
     $('.datepicker').pikaday();
     var selectArray = $('.dropkick');
 
-    var dk3 = $(selectArray[3]).dropkick();
-    var dk4 = $(selectArray[4]).dropkick();
-
-
+    // Hard Code in login data temporarily
     $('#username').val('branch1107@trueblue.com'); 
     $('#password').val('w3Lcome'); 
 
@@ -1968,7 +1965,7 @@ $(document).ready(function(){
             },
             success: function(data){
                 // Store the Reponse to run the second login
-                console.log(data);
+                // console.log(data);
                 mobileNum = data.User.MobileNumber;
                 queryContacts(data);
             }
@@ -2017,6 +2014,7 @@ $(document).ready(function(){
                 populateHeader();
                 populateTimezone();
                 populateOpenHours();
+                populateTempHours();
                 populateTransferNumber();
 
 
@@ -2070,6 +2068,8 @@ $(document).ready(function(){
                     // Get Both Times
                     var oHourFrom = pageData.Items[0].Data[9].Value;
                     var oHourTo = pageData.Items[0].Data[8].Value;
+                    // console.log('Open Hours From: ' + oHourFrom);
+                    // console.log('Open Hours To: ' + oHourTo);
                     // var oHourFrom = "09:30";
                     // var oHourTo = "12:30";
 
@@ -2123,6 +2123,60 @@ $(document).ready(function(){
 
                 // Configure the Temp Hours to match the record
                 function populateTempHours(){
+                    // Get Both Times
+                    var tempHourFrom = pageData.Items[0].Data[5].Value;
+                    var tempHourTo = pageData.Items[0].Data[6].Value;
+                    console.log('Open Hours From: ' + tempHourFrom);
+                    console.log('Open Hours To: ' + tempHourTo);
+                    // var oHourFrom = "09:30";
+                    // var oHourTo = "12:30";
+
+                     // Make Sure Data is correct
+                    if(pageData.Items[0].Data[5].Name == "TempOpenHoursFrom" && pageData.Items[0].Data[6].Name == "TempOpenHoursTo"){
+                        console.log('Temp Open Hours Updating with Correct Data');
+                        var context;
+
+                        // Are times populated? 
+                        if(tempHourFrom != "" && tempHourTo != ""){
+                            console.log('Temp Open Hours To & From Are Not Empty');
+
+                            //is time2 later than time1? 
+                            var flag = timeCompare(tempHourFrom, tempHourTo);
+
+                            //If times validate adjust the select elements, otherwise display an error
+                            if(flag == 1){
+                                context = $('#temp-open-from');
+                                timeSplitter(tempHourFrom, context);
+
+                                context = $('#temp-open-to');
+                                timeSplitter(tempHourTo, context);
+                            } 
+
+                            // Times don't validate, prompt user to update them
+                            else {
+                                console.log('Temp Open Hours Time From must be earlier than Time To');
+                                context = $('#temp-hours');
+                                displayMsg(context, "Please Update Temporary Open Hours", true);
+
+                                // Dropkick the options anyway
+                                $('#temp-open-from').find('.dropkick').dropkick();
+                                $('#temp-open-to').find('.dropkick').dropkick();
+                            }
+                        } 
+
+                        // If the times aren't populated, prompt for an update and dropkick the selects
+                        else {
+                            context = $('#temp-hours');
+                            displayMsg(context, "Please Update Temporary Open Hours", true);
+
+                            // Dropkick the options anyway
+                            $('#temp-open-from').find('.dropkick').dropkick();
+                            $('#temp-open-to').find('.dropkick').dropkick();
+                        }
+                    } else {
+                        // Throw a console error
+                        console.log('Error: Temporary Open Hours Data Not Pulling from Proper Fields');
+                    }
                 }
 
                 // Configure the Transfer Number to match the record
@@ -2143,9 +2197,15 @@ $(document).ready(function(){
                 // Make sure time2 is later than time1
                 function timeCompare(time1, time2){
                     time1 = time1.split(":");
+                    if(time1[0] == "12"){
+                        time1[0] = parseInt(time1[0]) - 12; 
+                    }
                     time1 = time1[0] + time1[1];
 
                     time2 = time2.split(":");
+                    if(time2[0] == "12"){
+                        time2[0] = parseInt(time2[0]) - 12; 
+                    }
                     time2 = time2[0] + time2[1];
 
                     // Is time2 later than time1?
@@ -2184,7 +2244,8 @@ $(document).ready(function(){
                     var optionArray = context.find('.dk-option');
 
                     // Get an absolute value of the time to compare
-                    var absTime = parseInt(time[0]) + ":" + parseInt(time[1]);
+                    var absTime = parseInt(time[0]) + ":" + time[1];
+                    console.log(absTime);
 
                     // Loop through the options, if they match, trigger a click event, forcing a selection
                     $.each(optionArray, function(index, value){
