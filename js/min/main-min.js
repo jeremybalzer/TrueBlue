@@ -1945,7 +1945,7 @@ $(document).ready(function(){
     $('#open-hours').find('input.submit').on('click', updateOpenHours);
 
     // Update Temporary Hours
-    $('#temp-open-hours').find('input.submit').on('click', updateTempHours);
+    $('#temp-hours').find('input.submit').on('click', updateTempHours);
 
     // Update Transfer Number
     $('#transfer-number').find('input.submit').on('click', updateTransferNumber);
@@ -1989,7 +1989,8 @@ $(document).ready(function(){
                     'First Name', 
                     'Last Name', 
                     'TempOpenHoursFrom', 
-                    'TempOpenHoursTo', 
+                    'TempOpenHoursTo',
+                    'TempOpenDate', 
                     'TimeZone', 
                     'TN Backup Needed', 
                     'TN Backup Phone',
@@ -2031,61 +2032,82 @@ $(document).ready(function(){
                   
                 // Configure the Time Zone to match the record  
                 function populateTimezone(){
-                    //Populate the Time Zone
                     var TZ = pageData.Items[0].Data[4].Value;
-                    if(-5 < TZ || TZ < -11){
-                        console.log('Error: Returned Time Zone is Outside Current Options');
-                    }
 
-                    //Grab the time zone options if value is already set
-                    if(TZ != ""){
-                       var zones = $('#time-zone').find('option');
-                        var currentZone = undefined;
-                        $.each(zones, function(index, value){
-                            if($(this).attr('value') == TZ){
-                                currentZone = index;
-                            }
-                        });
-                    }
-                    
-                    // Set the Current Time Zone to the index
-                    $(selectArray[0]).dropkick({
-                        initialize: function(){
-                            if(currentZone != undefined ){
-                                this.select(currentZone);
-                            }     
+                    // Make Sure this is the time zone field
+                    if(pageData.Items[0].Data[4].Value != "TimeZone"){
+                        console.log('Time Zone Updating Correctly');
+                        if(-5 < TZ || TZ < -11){
+                            console.log('Error: Returned Time Zone is Outside Current Options');
                         }
-                    }); 
+
+                        //Grab the time zone options if value is already set
+                        if(TZ != ""){
+                           var zones = $('#time-zone').find('option');
+                            var currentZone = undefined;
+                            $.each(zones, function(index, value){
+                                if($(this).attr('value') == TZ){
+                                    currentZone = index;
+                                }
+                            });
+                        }
+                        
+                        // Set the Current Time Zone to the index
+                        $(selectArray[0]).dropkick({
+                            initialize: function(){
+                                if(currentZone != undefined ){
+                                    this.select(currentZone);
+                                }     
+                            }
+                        }); 
+                    } else {
+                        console.log("Error: Time Zone Not Updating with Correct Data");
+                    }
                 }
 
                 // Configure the Open Hours to match the record
                 function populateOpenHours(){
                     // Get Both Times
-                    var oHourFrom = pageData.Items[0].Data[8].Value;
-                    var oHourTo = pageData.Items[0].Data[7].Value;
+                    var oHourFrom = pageData.Items[0].Data[9].Value;
+                    var oHourTo = pageData.Items[0].Data[8].Value;
                     // var oHourFrom = "09:30";
                     // var oHourTo = "12:30";
-                    var context; 
 
-                    // Are times populated? 
-                    if(oHourFrom != "" && oHourTo != ""){
-                        console.log('populated');
+                    // Make Sure Data is correct
+                    if(pageData.Items[0].Data[9].Name == "OpenHoursFrom" && pageData.Items[0].Data[8].Name == "OpenHoursTo"){
+                        console.log('Open Hours Updating with Correct Data');
+                        var context; 
 
-                        //is time2 later than time1? 
-                        var flag = timeCompare(oHourFrom, oHourTo);
+                        // Are times populated? 
+                        if(oHourFrom != "" && oHourTo != ""){
+                            console.log('Open Hours To & From Are Not Empty');
 
-                        //If times validate adjust the select elements, otherwise display an error
-                        if(flag == 1){
-                            context = $('#open-from');
-                            timeSplitter(oHourFrom, context);
+                            //is time2 later than time1? 
+                            var flag = timeCompare(oHourFrom, oHourTo);
 
-                            context = $('#open-to');
-                            timeSplitter(oHourTo, context);
+                            //If times validate adjust the select elements, otherwise display an error
+                            if(flag == 1){
+                                context = $('#open-from');
+                                timeSplitter(oHourFrom, context);
+
+                                context = $('#open-to');
+                                timeSplitter(oHourTo, context);
+                            } 
+
+                            // Times don't validate, prompt user to update them
+                            else {
+                                console.log('Open Hours Time From must be earlier than Time To');
+                                context = $('#open-hours');
+                                displayMsg(context, "Please Update Open Hours", true);
+
+                                // Dropkick the options anyway
+                                $('#open-from').find('.dropkick').dropkick();
+                                $('#open-to').find('.dropkick').dropkick();
+                            }
                         } 
 
-                        // Times don't validate, prompt user to update them
+                        // If the times aren't populated, prompt for an update and dropkick the selects
                         else {
-                            console.log('Open Hours Time From must be earlier than Time To');
                             context = $('#open-hours');
                             displayMsg(context, "Please Update Open Hours", true);
 
@@ -2093,16 +2115,9 @@ $(document).ready(function(){
                             $('#open-from').find('.dropkick').dropkick();
                             $('#open-to').find('.dropkick').dropkick();
                         }
-                    } 
-
-                    // If the times aren't populated, prompt for an update and dropkick the selects
-                    else {
-                        context = $('#open-hours');
-                        displayMsg(context, "Please Update Open Hours", true);
-
-                        // Dropkick the options anyway
-                        $('#open-from').find('.dropkick').dropkick();
-                        $('#open-to').find('.dropkick').dropkick();
+                    } else {
+                        // Throw a console error
+                        console.log('Error: Open Hours Data Not Pulling from Proper Fields');
                     }
                 };
 
@@ -2135,8 +2150,7 @@ $(document).ready(function(){
 
                     // Is time2 later than time1?
                     if(time1 < time2){
-                        //
-                        console.log('validates');
+                        // console.log('validates');
                         return 1;
                     } else {
                         return -1;
@@ -2151,14 +2165,14 @@ $(document).ready(function(){
                     
                     // Toggle the AM/PM Switch
                     if(time[0] < 12){
-                        console.log(time[0] + "am");
+                        // Leave On/Off Switch at AM
                     } else {
                         //adjust to a 12 hour clock
                         if(12 < time[0]){
                             time[0] = parseInt(time[0]) - 12;
-                            console.log('PM time is now ' + time[0]);
+                            // console.log('PM time is now ' + time[0]);
                         }
-                        console.log(time[1] + "pm");
+                        // Toggle the AM/PM switch to PM
                         context.find('.onoffswitch-checkbox').click();
                     }
 
@@ -2270,8 +2284,6 @@ $(document).ready(function(){
             toHour = convertTo24Hour(toHour);
         }
 
-        // debugger;
-
         if(toAMPM == 'pm' && fromAMPM == "am"){
             doUpdate();
             displayMsg(context, 'Update Successful', false);
@@ -2285,6 +2297,7 @@ $(document).ready(function(){
         }
         
         function doUpdate(){
+            // debugger;
             updateContact('TempOpenHoursFrom', fromHour);
             updateContact('TempOpenHoursTo', toHour);
         }
