@@ -146,7 +146,7 @@
         </section>
 
         <!-- Configure the IVR's Open Hours Flow on Specific Days and Times -->
-        <section class="locked">
+        <section id="temp-hours" class="locked">
           <div class="wrapper">
             <h1>Temporary Open Hours</h1>
             <p>Set the IVR to use the Open Hours flow on the following day and times:</p>
@@ -155,7 +155,7 @@
               <input class="datepicker" type="text" placeholder="mm/dd/yyyy" readonly>
 
               <div class="row">
-                <div class="column">
+                <div id="temp-open-from" class="column">
                   <label for="from">From:</label>
                   <select class="12-hour block dropkick" name="from">
                     <!-- Main.js populates values -->
@@ -168,7 +168,7 @@
                     </label>
                   </div>
                 </div>
-                <div class="column">
+                <div id="temp-open-to" class="column">
                   <label for="from">From:</label>
                   <select class="12-hour block dropkick" name="from">
                     <!-- Main.js populates values -->

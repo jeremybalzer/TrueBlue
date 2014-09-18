@@ -28,13 +28,7 @@ $(document).ready(function(){
     // Initiate the Datepicker and Select Styling Plugins
     $('.datepicker').pikaday();
     var selectArray = $('.dropkick');
-    // var dk0 = $(selectArray[0]).dropkick({
-    //     initialize: function(){
-    //         this.select(2);
-    //     }
-    // });
-    var dk1 = $(selectArray[1]).dropkick();
-    var dk2 = $(selectArray[2]).dropkick();
+
     var dk3 = $(selectArray[3]).dropkick();
     var dk4 = $(selectArray[4]).dropkick();
 
@@ -81,6 +75,9 @@ $(document).ready(function(){
     // Update Open Hours
     $('#open-hours').find('input.submit').on('click', updateOpenHours);
 
+    // Update Temporary Hours
+    $('#temp-open-hours').find('input.submit').on('click', updateTempHours);
+
     // Update Transfer Number
     $('#transfer-number').find('input.submit').on('click', updateTransferNumber);
 
@@ -104,116 +101,219 @@ $(document).ready(function(){
                 // Store the Reponse to run the second login
                 console.log(data);
                 mobileNum = data.User.MobileNumber;
-
-                // Run the second ajax query to get the contact info
-                $.ajax({
-                    url: "https://wapi.onereach.com/api/querycontacts",
-                    type: "POST",
-                    contentType:'application/json',
-                    data: JSON.stringify({
-                        QueryParams: [
-                            {Name: "First Name", Value: data.User.FirstName}
-                        ],
-                        Fields: [
-                            'First Name', 
-                            'Last Name', 
-                            'TempOpenHoursFrom', 
-                            'TempOpenHoursTo', 
-                            'TimeZone', 
-                            'TN Backup Needed', 
-                            'TN Backup Phone',
-                            'OpenHoursTo',
-                            'OpenHoursFrom'
-                        ]
-                    }),
-                    headers: {
-                        username: "contact@trueblue.com",
-                        password: data.User.MobileNumber
-                    }, 
-                    error: function(data, err, msg){
-                        console.log(msg);
-                    },
-                    complete: function(){
-                        $('#login-screen').addClass('hidden');
-                        $('#settings').removeClass('hidden');
-                    },
-                    success: function(response){
-                        pageData = response;
-                        console.log(pageData.Items[0].Data);
-                        ID = pageData.Items[0].Id;
-
-                        populateHeader();
-                        populateTimezone();
-                        populateOpenHours();
-                        populateTransferNumber();
-
-
-                        function populateHeader(){
-                            //Populate the Header
-                            $('span.location').html(pageData.Items[0].Data[1].Value);
-                            $('#location-phone').html(
-                                data.User.MobileNumber.slice(0,3) + "-" + 
-                                data.User.MobileNumber.slice(3,6) + "-" + 
-                                data.User.MobileNumber.slice(6,10)
-                            );
-                        };
-                          
-                        // Configure the Time Zone to match the record  
-                        function populateTimezone(){
-                            //Populate the Time Zone
-                            var TZ = pageData.Items[0].Data[4].Value;
-                            if(-5 < TZ || TZ < -11){
-                                console.log('Error: Returned Time Zone is Outside Current Options');
-                            }
-
-                            //Grab the time zone options if value is already set
-                            if(TZ != ""){
-                               var zones = $('#time-zone').find('option');
-                                var currentZone = undefined;
-                                $.each(zones, function(index, value){
-                                    if($(this).attr('value') == TZ){
-                                        currentZone = index;
-                                    }
-                                });
-                            }
-                            
-                            // Set the Current Time Zone to the index
-                            $(selectArray[0]).dropkick({
-                                initialize: function(){
-                                    if(currentZone != undefined ){
-                                        this.select(currentZone);
-                                    }     
-                                }
-                            }); 
-                        }
-
-                        // Configure the Open Hours to match the record
-                        function populateOpenHours(){
-
-                        };
-
-                        // Configure the Temp Hours to match the record
-                        function populateTempHours(){
-
-                        }
-
-                        // Configure the Transfer Number to match the record
-                        function populateTransferNumber(){
-                            var status = pageData.Items[0].Data[2].Value; 
-                            if(status != ""){
-                                $('#myonoffswitch-5').attr('data-boolean', status);
-
-                                // If Status is 'On', toggle the switch
-                                if(status == "on"){
-                                    $('#myonoffswitch-5').click()
-                                }
-                            }
-                            $('#update-number').attr('placeholder', 'Current: ' + pageData.Items[0].Data[3].Value);
-                        }
-                    }
-                });
+                queryContacts(data);
             }
         });
+    };
+
+    // Run the second ajax query to get the contact info
+    function queryContacts(data){
+        $.ajax({
+            url: "https://wapi.onereach.com/api/querycontacts",
+            type: "POST",
+            contentType:'application/json',
+            data: JSON.stringify({
+                QueryParams: [
+                    {Name: "First Name", Value: data.User.FirstName}
+                ],
+                Fields: [
+                    'First Name', 
+                    'Last Name', 
+                    'TempOpenHoursFrom', 
+                    'TempOpenHoursTo', 
+                    'TimeZone', 
+                    'TN Backup Needed', 
+                    'TN Backup Phone',
+                    'OpenHoursTo',
+                    'OpenHoursFrom'
+                ]
+            }),
+            headers: {
+                username: "contact@trueblue.com",
+                password: data.User.MobileNumber
+            }, 
+            error: function(data, err, msg){
+                console.log(msg);
+            },
+            complete: function(){
+                $('#login-screen').addClass('hidden');
+                $('#settings').removeClass('hidden');
+            },
+            success: function(response){
+                pageData = response;
+                console.log(pageData.Items[0].Data);
+                ID = pageData.Items[0].Id;
+
+                populateHeader();
+                populateTimezone();
+                populateOpenHours();
+                populateTransferNumber();
+
+
+                function populateHeader(){
+                    //Populate the Header
+                    $('span.location').html(pageData.Items[0].Data[1].Value);
+                    $('#location-phone').html(
+                        data.User.MobileNumber.slice(0,3) + "-" + 
+                        data.User.MobileNumber.slice(3,6) + "-" + 
+                        data.User.MobileNumber.slice(6,10)
+                    );
+                };
+                  
+                // Configure the Time Zone to match the record  
+                function populateTimezone(){
+                    //Populate the Time Zone
+                    var TZ = pageData.Items[0].Data[4].Value;
+                    if(-5 < TZ || TZ < -11){
+                        console.log('Error: Returned Time Zone is Outside Current Options');
+                    }
+
+                    //Grab the time zone options if value is already set
+                    if(TZ != ""){
+                       var zones = $('#time-zone').find('option');
+                        var currentZone = undefined;
+                        $.each(zones, function(index, value){
+                            if($(this).attr('value') == TZ){
+                                currentZone = index;
+                            }
+                        });
+                    }
+                    
+                    // Set the Current Time Zone to the index
+                    $(selectArray[0]).dropkick({
+                        initialize: function(){
+                            if(currentZone != undefined ){
+                                this.select(currentZone);
+                            }     
+                        }
+                    }); 
+                }
+
+                // Configure the Open Hours to match the record
+                function populateOpenHours(){
+                    // Get Both Times
+                    var oHourFrom = pageData.Items[0].Data[8].Value;
+                    var oHourTo = pageData.Items[0].Data[7].Value;
+                    // var oHourFrom = "09:30";
+                    // var oHourTo = "12:30";
+                    var context; 
+
+                    // Are times populated? 
+                    if(oHourFrom != "" && oHourTo != ""){
+                        console.log('populated');
+
+                        //is time2 later than time1? 
+                        var flag = timeCompare(oHourFrom, oHourTo);
+
+                        //If times validate adjust the select elements, otherwise display an error
+                        if(flag == 1){
+                            context = $('#open-from');
+                            timeSplitter(oHourFrom, context);
+
+                            context = $('#open-to');
+                            timeSplitter(oHourTo, context);
+                        } 
+
+                        // Times don't validate, prompt user to update them
+                        else {
+                            console.log('Open Hours Time From must be earlier than Time To');
+                            context = $('#open-hours');
+                            displayMsg(context, "Please Update Open Hours", true);
+
+                            // Dropkick the options anyway
+                            $('#open-from').find('.dropkick').dropkick();
+                            $('#open-to').find('.dropkick').dropkick();
+                        }
+                    } 
+
+                    // If the times aren't populated, prompt for an update and dropkick the selects
+                    else {
+                        context = $('#open-hours');
+                        displayMsg(context, "Please Update Open Hours", true);
+
+                        // Dropkick the options anyway
+                        $('#open-from').find('.dropkick').dropkick();
+                        $('#open-to').find('.dropkick').dropkick();
+                    }
+                };
+
+                // Configure the Temp Hours to match the record
+                function populateTempHours(){
+                }
+
+                // Configure the Transfer Number to match the record
+                function populateTransferNumber(){
+                    var status = pageData.Items[0].Data[2].Value; 
+                    if(status != ""){
+                        $('#myonoffswitch-5').attr('data-boolean', status);
+
+                        // If Status is 'On', toggle the switch
+                        if(status == "on"){
+                            $('#myonoffswitch-5').click()
+                        }
+                    }
+                    $('#update-number').attr('placeholder', 'Current: ' + pageData.Items[0].Data[3].Value);
+                }
+
+                // Utility Functions
+                // Make sure time2 is later than time1
+                function timeCompare(time1, time2){
+                    time1 = time1.split(":");
+                    time1 = time1[0] + time1[1];
+
+                    time2 = time2.split(":");
+                    time2 = time2[0] + time2[1];
+
+                    // Is time2 later than time1?
+                    if(time1 < time2){
+                        //
+                        console.log('validates');
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+
+                // Split the time into Hours and Minutes and update the control
+                function timeSplitter(time, context){
+                    // debugger;
+
+                    time = time.split(":");
+                    
+                    // Toggle the AM/PM Switch
+                    if(time[0] < 12){
+                        console.log(time[0] + "am");
+                    } else {
+                        //adjust to a 12 hour clock
+                        if(12 < time[0]){
+                            time[0] = parseInt(time[0]) - 12;
+                            console.log('PM time is now ' + time[0]);
+                        }
+                        console.log(time[1] + "pm");
+                        context.find('.onoffswitch-checkbox').click();
+                    }
+
+                    // Dropkick the element
+                    var dk = context.find('.dropkick').dropkick();
+
+                    // Update the selected option
+                    // Get all the <li>'s
+                    var optionArray = context.find('.dk-option');
+
+                    // Get an absolute value of the time to compare
+                    var absTime = parseInt(time[0]) + ":" + parseInt(time[1]);
+
+                    // Loop through the options, if they match, trigger a click event, forcing a selection
+                    $.each(optionArray, function(index, value){
+                        $(value).removeClass('dk-option-selected');
+                        var dataValue = $(value).attr('data-value');
+                        if(absTime == dataValue){
+                            $(value).click();
+                        }
+                    });
+                }
+            }
+        })
     };
 
     // Update Time Zone
@@ -221,7 +321,7 @@ $(document).ready(function(){
         context = $('#time-zone');
         console.log('updating');
         var newTime = $('#time-zone').find('.dk-option-selected').attr('data-value');
-        updateContact(5, 'TimeZone', newTime);
+        updateContact('TimeZone', newTime);
         displayMsg(context, 'Update Successful', false);
     }
 
@@ -234,14 +334,14 @@ $(document).ready(function(){
 
         // If no new number is provided, update the Backup Needed Status
         if(newNumber == ""){
-            updateContact(2, 'TN Backup Needed', backup);
+            updateContact('TN Backup Needed', backup);
             displayMsg(context, 'Update Successful', false);
         } else {
             if(isTenDigits == -1){
                 displayMsg(context, 'Please enter a valid ten digit number', true);
             } else {
-                updateContact(4, 'TN Backup Phone', newNumber);
-                updateContact(2, 'TN Backup Needed', backup);
+                updateContact('TN Backup Phone', newNumber);
+                updateContact('TN Backup Needed', backup);
                 displayMsg(context, 'Update Successful', false);
             }
         }    
@@ -249,29 +349,79 @@ $(document).ready(function(){
 
     function updateOpenHours(){
         var context = $('#open-hours');
-        var fromHour = $('#open-from').find('.dk-option-selected').attr('data-value').replace(':', '');;
+        var fromHour = $('#open-from').find('.dk-option-selected').attr('data-value');
         var fromAMPM = $('#open-from').find('#myonoffswitch-1').attr('data-time');
-        var toHour = $('#open-to').find('.dk-option-selected').attr('data-value').replace(':', '');;
+        var toHour = $('#open-to').find('.dk-option-selected').attr('data-value');
         var toAMPM = $('#open-to').find('#myonoffswitch-2').attr('data-time');;
 
-        // console.log(fromHour);
-        // console.log(toHour);
+        // Convert to 24 Hour Format
+        if(fromAMPM == "pm"){
+            fromHour = convertTo24Hour(fromHour);
+        }
+
+        // Convert to 24 Hour Format
+        if(toAMPM == "pm"){
+            toHour = convertTo24Hour(toHour);
+        }
+
+        // debugger;
 
         if(toAMPM == 'pm' && fromAMPM == "am"){
+            doUpdate();
             displayMsg(context, 'Update Successful', false);
         } else if (toAMPM == fromAMPM && fromHour < toHour){
+            doUpdate();
             displayMsg(context, 'Update Successful', false);
         } else if(toAMPM == fromAMPM && fromHour == toHour){
             displayMsg(context, 'Error: The end time must be later than the start time', true);
         } else {
             displayMsg(context, "Error: Closing hour can not be before opening hour", true);
         }
-        // if()
-        // updateContact(3, 'OpenHoursFrom', fromHour + fromAMPM);
-        // updateContact(4, 'OpenHoursTo', toHour + toAMPM);
+        
+        function doUpdate(){
+            updateContact('OpenHoursFrom', fromHour);
+            updateContact('OpenHoursTo', toHour);
+        }
     };
 
-    function updateContact(index, record, value){
+    function updateTempHours(){
+        var context = $('#temp-hours');
+        var fromHour = $('#temp-open-from').find('.dk-option-selected').attr('data-value');
+        var fromAMPM = $('#temp-open-from').find('#myonoffswitch-3').attr('data-time');
+        var toHour = $('#temp-open-to').find('.dk-option-selected').attr('data-value');
+        var toAMPM = $('#temp-open-to').find('#myonoffswitch-4').attr('data-time');;
+
+        // Convert to 24 Hour Format
+        if(fromAMPM == "pm"){
+            fromHour = convertTo24Hour(fromHour);
+        }
+
+        // Convert to 24 Hour Format
+        if(toAMPM == "pm"){
+            toHour = convertTo24Hour(toHour);
+        }
+
+        // debugger;
+
+        if(toAMPM == 'pm' && fromAMPM == "am"){
+            doUpdate();
+            displayMsg(context, 'Update Successful', false);
+        } else if (toAMPM == fromAMPM && fromHour < toHour){
+            doUpdate();
+            displayMsg(context, 'Update Successful', false);
+        } else if(toAMPM == fromAMPM && fromHour == toHour){
+            displayMsg(context, 'Error: The end time must be later than the start time', true);
+        } else {
+            displayMsg(context, "Error: Closing hour can not be before opening hour", true);
+        }
+        
+        function doUpdate(){
+            updateContact('TempOpenHoursFrom', fromHour);
+            updateContact('TempOpenHoursTo', toHour);
+        }
+    }
+
+    function updateContact(record, value){
         $.ajax({
             url: "https://wapi.onereach.com/api/contact/" + ID,
             type: "PUT",
@@ -305,6 +455,13 @@ $(document).ready(function(){
             }, 2500);
         }
         context.find('.message').html(msg).show().css('color', color);
+    }
+
+    function convertTo24Hour(time){
+        time = time.split(":");
+        time[0] = parseInt(time[0]) + 12;
+        time = time[0] + ":" + time[1];
+        return time;
     }
 
     function validateNumber(number){
