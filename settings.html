@@ -103,8 +103,8 @@
             <form>
               <div class="row">
                 <div id="open-from" class="column">
-                  <label for="from">From:</label>
-                  <select class="12-hour block dropkick" name="from">
+                  <label>From:</label>
+                  <select class="12-hour block dropkick">
                     <!-- Main.js populates values -->
                   </select>
                   
@@ -117,10 +117,9 @@
                   </div>
 
                 </div>
-                <div id ="open-to"class="column">
-                  <label for="to">To:</label>
-                  
-                  <select class="12-hour block dropkick" name="to">
+                <div id ="open-to" class="column">
+                  <label>To:</label>
+                  <select class="12-hour block dropkick">
                     <!-- Main.js populates values -->
                   </select>
                   
@@ -150,14 +149,14 @@
           <div class="wrapper">
             <h1>Temporary Open Hours</h1>
             <p>Set the IVR to use the Open Hours flow on the following day and times:</p>
-            <form action="" method="">
+            <form>
               <label>Which day:</label>
-              <input class="datepicker" type="text" placeholder="mm/dd/yyyy" readonly>
+              <input class="datepicker" type="text" placeholder="yyyy-mm-dd" readonly>
 
               <div class="row">
                 <div id="temp-open-from" class="column">
-                  <label for="from">From:</label>
-                  <select class="12-hour block dropkick" name="from">
+                  <label>From:</label>
+                  <select class="12-hour block dropkick">
                     <!-- Main.js populates values -->
                   </select>
                   <div class="onoffswitch">
@@ -169,8 +168,8 @@
                   </div>
                 </div>
                 <div id="temp-open-to" class="column">
-                  <label for="from">From:</label>
-                  <select class="12-hour block dropkick" name="from">
+                  <label>To:</label>
+                  <select class="12-hour block dropkick">
                     <!-- Main.js populates values -->
                   </select>
                   <div class="onoffswitch">
@@ -196,7 +195,7 @@
           <div class="wrapper">
             <h1>Who is on call?</h1>
             <p>Enter the phone numbers of those who should receive voicemail notifications (10 digit numbers only, separated with commas and no spaces)</p>
-            <form action="" method="" action="" name="">
+            <form>
               <textarea rows="4" placeholder="1111111111,2222222222,3333333333"></textarea>
               <input type="button" class="submit" value="Update">
             </form>
