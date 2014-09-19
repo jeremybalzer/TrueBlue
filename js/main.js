@@ -91,7 +91,10 @@ $(document).ready(function(){
         var user = $('#username').val();
         var pword = $("#password").val();
         
+        $.support.cors = true;
+
         $.ajax({
+            crossDomain: true,
             url: "https://wapi.onereach.com/api/login",
             headers:{
                 username: user,
@@ -112,6 +115,7 @@ $(document).ready(function(){
     // Run the second ajax query to get the contact info
     function queryContacts(data){
         $.ajax({
+            crossDomain: true,
             url: "https://wapi.onereach.com/api/querycontacts",
             type: "POST",
             contentType:'application/json',
