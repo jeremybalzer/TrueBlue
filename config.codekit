@@ -547,31 +547,31 @@
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/moment.js",
 			"position": 1,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick-jquery.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday.js",
 			"position": 2,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/moment.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday-jquery.js",
 			"position": 3,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick.js",
 			"position": 4,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday-jquery.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick-jquery.js",
 			"position": 5,
 			"type": 0
 			}

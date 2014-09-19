@@ -140,6 +140,7 @@ $(document).ready(function(){
                 console.log(msg);
             },
             complete: function(){
+                // $('.dropkick').click();
                 $('#login-screen').addClass('hidden');
                 $('#settings').removeClass('hidden');
             },
@@ -327,6 +328,7 @@ $(document).ready(function(){
 
                 // Split the time into Hours and Minutes and update the control
                 function timeSplitter(time, context){
+                    var dk, optionArray, absTime;
                     time = time.split(":");
                     
                     // Toggle the AM/PM Switch
@@ -342,10 +344,10 @@ $(document).ready(function(){
                     }
 
                     // Dropkick the element
-                    var dk = context.find('.dropkick').dropkick();
+                    context.find('.dropkick').dropkick();
 
                     // Update the selected option by getting all the options
-                    var optionArray = context.find('.dk-option');
+                    optionArray = context.find('.dk-option');
 
                     // Get an absolute value of the time to compare
                     if(parseInt(time[0]) == 0){
@@ -353,17 +355,8 @@ $(document).ready(function(){
                     };
 
                     var absTime = parseInt(time[0]) + ":" + time[1];
-
-                    // Loop through the options, if they match, trigger a click event, forcing a selection
-                    $.each(optionArray, function(index, value){
-                        $(value).removeClass('dk-option-selected');
-                        var dataValue = $(value).attr('data-value');
-                        // debugger;
-                        if(absTime == dataValue){
-                            debugger;
-                            $(value).click();
-                        }
-                    });
+                    context.find('li[data-value="'+ absTime +'"]').click();
+                    $('div.dk-select').removeClass('dk-select-open-down');
                 }
             }
         })
