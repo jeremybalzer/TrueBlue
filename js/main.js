@@ -145,6 +145,7 @@ $(document).ready(function(){
                 populateHeader();
                 populateTimezone();
                 populateOpenHours();
+                populateTempDate();
                 populateTempHours();
                 populateWhoIsOnCall();
                 populateTransferNumber();
@@ -262,6 +263,16 @@ $(document).ready(function(){
                     }
                 };
 
+                // Configure the Temp Hour Date to match the record
+                function populateTempDate(){
+                    if(pageData.Items[0].Data[8].Name == "TempOpenDate"){
+                        console.log('Populating Temp Open Date');
+                    }
+                    var oldDate = pageData.Items[0].Data[8].Value;
+                    oldDate = oldDate.split("/");
+                    $('.datepicker').val(oldDate[2] + "-" + oldDate[0] + "-" + oldDate[1]);
+                }
+
                 // Configure the Temp Hours to match the record
                 function populateTempHours(){
                     // Get Both Times
@@ -319,9 +330,6 @@ $(document).ready(function(){
                 // Configure Who is on Call
                 function populateWhoIsOnCall(){
                     $('#call-list').val(pageData.Items[0].Data[7].Value);
-                    // if($('#call-list').val() != ""){
-                    //     displayMsg(context, "These numbers are currently on call", true);
-                    // }
                 }
 
                 // Configure the Transfer Number to match the record
@@ -485,11 +493,16 @@ $(document).ready(function(){
         var timeValidate;
         var context = $('#temp-hours');
         var fromHour = $('#temp-open-from').find('.dk-option-selected').attr('data-value');
+        if(!fromHour){
+            fromHour = $('#temp-open-from').find('select').val();
+        }
         var fromAMPM = $('#temp-open-from').find('#myonoffswitch-3').attr('data-time');
         var toHour = $('#temp-open-to').find('.dk-option-selected').attr('data-value');
+        if(!toHour){
+            toHour = $('#temp-open-to').find('select').val();
+        }
         var toAMPM = $('#temp-open-to').find('#myonoffswitch-4').attr('data-time');
         var newDate = $('.datepicker').val();
-
 
         // Convert to 24 Hour Format
         fromHour = formatTime(fromHour, fromAMPM);
@@ -512,7 +525,6 @@ $(document).ready(function(){
         }
         
         function doUpdate(){
-            console.log(newDate);
             updateContact('TempOpenDate', newDate);
             updateContact('TempOpenHoursFrom', fromHour);
             updateContact('TempOpenHoursTo', toHour);
@@ -556,7 +568,6 @@ $(document).ready(function(){
     }
 
     function formatTime(time, halfday){
-        // console.log('Start: ' + time + " " + halfday);
         time = time.split(":");
 
         if (halfday == "am" && parseInt(time[0]) == 12) {
