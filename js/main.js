@@ -27,13 +27,6 @@ $(document).ready(function(){
         }
     });
 
-    // Initiate the Datepicker and Select Styling Plugins
-    $('.datepicker').pikaday({
-        onSelect: function(){
-            var date = document.createTextNode(this.getMoment().format('DD MM YYYY'))
-            $('.selected').html(date);
-        }
-    });
     var selectArray = $('.dropkick');
 
     // Hard Code in login data temporarily
@@ -268,9 +261,20 @@ $(document).ready(function(){
                     if(pageData.Items[0].Data[8].Name == "TempOpenDate"){
                         console.log('Populating Temp Open Date');
                     }
-                    var oldDate = pageData.Items[0].Data[8].Value;
-                    oldDate = oldDate.split("/");
-                    $('.datepicker').val(oldDate[2] + "-" + oldDate[0] + "-" + oldDate[1]);
+
+                    var selectDate = new Date(pageData.Items[0].Data[8].Value)
+                    var today = new Date();
+
+                    // Initiate the Datepicker and Select Styling Plugins
+                    $('.datepicker').pikaday({
+                        minDate: today,
+                        defaultDate: selectDate,
+                        setDefaultDate: true,
+                        onSelect: function(){
+                            var date = document.createTextNode(this.getMoment().format('DD MM YYYY'))
+                            $('.selected').html(date);
+                        }
+                    });
                 }
 
                 // Configure the Temp Hours to match the record
@@ -465,10 +469,15 @@ $(document).ready(function(){
     function updateOpenHours(){
         var context = $('#open-hours');
         var fromHour = $('#open-from').find('.dk-option-selected').attr('data-value');
+        if(!fromHour){
+            fromHour = $('#open-from').find('select').val();
+        }
         var fromAMPM = $('#open-from').find('#myonoffswitch-1').attr('data-time');
         var toHour = $('#open-to').find('.dk-option-selected').attr('data-value');
-        var toAMPM = $('#open-to').find('#myonoffswitch-2').attr('data-time');;
-
+        if(!toHour){
+            toHour = $('#open-to').find('select').val();
+        }
+        var toAMPM = $('#open-to').find('#myonoffswitch-2').attr('data-time');
         // Convert to 24 Hour Format
         fromHour = formatTime(fromHour, fromAMPM);
         toHour = formatTime(toHour, toAMPM);
@@ -503,6 +512,9 @@ $(document).ready(function(){
         }
         var toAMPM = $('#temp-open-to').find('#myonoffswitch-4').attr('data-time');
         var newDate = $('.datepicker').val();
+        var today = new Date();
+        today = today.getFullYear() + "/" + today.getMonth() + "/" + today.getDate();
+        console.log(today);
 
         // Convert to 24 Hour Format
         fromHour = formatTime(fromHour, fromAMPM);
