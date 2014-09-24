@@ -64,24 +64,11 @@ $(document).ready(function(){
         }
     })
 
-    // See Who is on a Call
-    $('.accordion-toggle').on('click', function(e) {
-        e.preventDefault();
-        $(this).find('.arrow').toggleClass('down').toggleClass('up');
-        // $(this).siblings('.accordion-body').toggleClass('open');
-        $(this).siblings('.accordion-body').slideToggle(250);
-    });
-
-    // Update TimeZone
+    // Update Records
     $('#time-zone').find('input.submit').on('click', updateTimezone);
-
-    // Update Open Hours
     $('#open-hours').find('input.submit').on('click', updateOpenHours);
-
-    // Update Temporary Hours
     $('#temp-hours').find('input.submit').on('click', updateTempHours);
-
-    // Update Transfer Number
+    $('#on-call').find('input.submit').on('click', updateCallList);
     $('#transfer-number').find('input.submit').on('click', updateTransferNumber);
 
 // ############ Functions ############
@@ -133,7 +120,8 @@ $(document).ready(function(){
                     'TN Backup Needed', 
                     'TN Backup Phone',
                     'OpenHoursTo',
-                    'OpenHoursFrom'
+                    'OpenHoursFrom',
+                    'WhosOnCall'
                 ]
             }),
             headers: {
@@ -157,8 +145,8 @@ $(document).ready(function(){
                 populateTimezone();
                 populateOpenHours();
                 populateTempHours();
+                populateWhoIsOnCall();
                 populateTransferNumber();
-
 
                 // Populate the Header
                 function populateHeader(){
@@ -208,15 +196,15 @@ $(document).ready(function(){
                 // Configure the Open Hours to match the record
                 function populateOpenHours(){
                     // Get Both Times
-                    var oHourFrom = pageData.Items[0].Data[9].Value;
-                    var oHourTo = pageData.Items[0].Data[8].Value;
+                    var oHourFrom = pageData.Items[0].Data[10].Value;
+                    var oHourTo = pageData.Items[0].Data[9].Value;
                     console.log('Open Hours From: ' + oHourFrom);
                     console.log('Open Hours To: ' + oHourTo);
                     // var oHourFrom = "09:30";
                     // var oHourTo = "12:30";
 
                     // Make Sure Data is correct
-                    if(pageData.Items[0].Data[9].Name == "OpenHoursFrom" && pageData.Items[0].Data[8].Name == "OpenHoursTo"){
+                    if(pageData.Items[0].Data[10].Name == "OpenHoursFrom" && pageData.Items[0].Data[9].Name == "OpenHoursTo"){
                         console.log('Open Hours Updating with Correct Data');
                         var context; 
 
@@ -268,11 +256,11 @@ $(document).ready(function(){
                     // Get Both Times
                     var tempHourFrom = pageData.Items[0].Data[5].Value;
                     var tempHourTo = pageData.Items[0].Data[6].Value;
-                    var tempDate = pageData.Items[0].Data[7].Value;
+                    var tempDate = pageData.Items[0].Data[8].Value;
                     var context;
 
                      // Make Sure Data is correct
-                    if(pageData.Items[0].Data[5].Name == "TempOpenHoursFrom" && pageData.Items[0].Data[6].Name == "TempOpenHoursTo" && pageData.Items[0].Data[7].Name == "TempOpenDate"){
+                    if(pageData.Items[0].Data[5].Name == "TempOpenHoursFrom" && pageData.Items[0].Data[6].Name == "TempOpenHoursTo" && pageData.Items[0].Data[8].Name == "TempOpenDate"){
                         console.log('Temp Open Hours Updating with Correct Data and Correct Date');
                         
                         // Are times populated? 
@@ -315,6 +303,14 @@ $(document).ready(function(){
                     } else {
                         console.log('Error: Temporary Open Hours Data Not Pulling from Proper Fields');
                     }
+                }
+
+                // Configure Who is on Call
+                function populateWhoIsOnCall(){
+                    $('#call-list').val(pageData.Items[0].Data[7].Value);
+                    // if($('#call-list').val() != ""){
+                    //     displayMsg(context, "These numbers are currently on call", true);
+                    // }
                 }
 
                 // Configure the Transfer Number to match the record
@@ -375,18 +371,57 @@ $(document).ready(function(){
         displayMsg(context, 'Update Successful', false);
     }
 
+    function updateCallList(){
+        var context = $('#on-call');
+        var newList = $('#call-list').val();
+        var flag;
+
+        // If List is Empty Don't Submit
+        if(newList == ""){
+            displayMsg(context, "Please enter at least one ten digit number to be on call", true);
+        } else {
+            var newListArray = newList.split(",");
+            var flagArray = [];
+            var newCallList = "";
+            if(0 < newListArray.length){
+                
+                $.each(newListArray, function(index, value){
+                    flag = validateNumber(value);
+                    console.log(flag);
+                    if(flag == -1){
+                        displayMsg(context, "Please enter ten digits numbers separated by commas and no spaces", true);
+                        flagArray.push(flag);
+                    } else {
+                        if(newCallList == "") {
+                            newCallList = flag.toString();
+                        } else {
+                            newCallList = newCallList + "," + flag;
+                        }
+                    }
+                }); 
+            }
+            if( flagArray.length == 0) {
+                displayMsg(context, "Update Successful", false);
+                console.log(newCallList);
+                updateContact("WhosOnCall",newCallList);
+            }
+        }  
+
+    }
+
     function updateTransferNumber(){
         var context = $('#transfer-number');
         var newNumber = $('#update-number').val();
         var backup = $('#myonoffswitch-5').attr('data-boolean');
         
-        var isTenDigits = validateNumber(newNumber)
-
         // If no new number is provided, update the Backup Needed Status
         if(newNumber == ""){
             updateContact('TN Backup Needed', backup);
             displayMsg(context, 'Update Successful', false);
         } else {
+            
+            var isTenDigits = validateNumber(newNumber);
+
             if(isTenDigits == -1){
                 displayMsg(context, 'Please enter a valid ten digit number', true);
             } else {
@@ -440,8 +475,6 @@ $(document).ready(function(){
 
         // Make sure from time is sooner than to time
         timeValidate = compareTime(fromHour, toHour);
-
-        // debugger;
 
         // Throw Error if no date is selected
         if(newDate == ""){
@@ -536,38 +569,18 @@ $(document).ready(function(){
     }
 
     function validateNumber(number){
-        numArray = number.toString().split("");
-        if(numArray.length != 10) {
-            console.log('Array Length is: ' + numArray.length);
+
+        number = parseInt(number.toString().replace(/\s+/g, ''));
+        console.log(number);
+        isNumber = isNaN(number);
+        console.log(isNumber);
+
+        if(number.toString().split("").length != 10){
+            return -1;
+        } else if (isNumber == true) {
             return -1;
         } else {
-            arrayTest = [];
-
-            // Evaluate each value to see if it's a number
-            $.each(numArray, function(index, value){
-                value = isNaN(value);
-                if(value == true){
-                    arrayTest.push(true)
-                } else {
-                    arrayTest.push(false);
-                }
-            });
-
-            // any of the values aren't a number return a flag
-            if(
-                arrayTest[0] == true ||
-                arrayTest[1] == true ||
-                arrayTest[2] == true ||
-                arrayTest[3] == true ||
-                arrayTest[4] == true ||
-                arrayTest[5] == true ||
-                arrayTest[6] == true ||
-                arrayTest[7] == true ||
-                arrayTest[8] == true ||
-                arrayTest[9] == true 
-            ){
-                return -1;
-            }
+            return number;
         }
     };
 

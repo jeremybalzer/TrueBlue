@@ -191,24 +191,15 @@
         </section>
 
         <!-- Configure voicemail notifications -->
-        <section class="locked">
+        <section id="on-call" class="locked">
           <div class="wrapper">
             <h1>Who is on call?</h1>
             <p>Enter the phone numbers of those who should receive voicemail notifications (10 digit numbers only, separated with commas and no spaces)</p>
             <form>
-              <textarea rows="4" placeholder="1111111111,2222222222,3333333333"></textarea>
+              <textarea id="call-list" rows="4" placeholder="1111111111,2222222222,3333333333"></textarea>
               <input type="button" class="submit" value="Update">
             </form>
-            <div class="accordion">
-              <a href="#" class="accordion-toggle">See who is already on call <span class="arrow down"></span></a>
-              <ul class="accordion-body">
-                <li>720-891-3780</li>
-                <li>720-891-3780</li>
-                <li>720-891-3780</li>
-                <li>720-891-3780</li>
-                <li>720-891-3780</li>
-              </ul>
-            </div>
+            <p class="message"></p>
             <div class="screen">
               <a href="#" class="padlock"></a>
             </div>

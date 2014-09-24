@@ -803,28 +803,6 @@ a {
   color: #00aeef;
   text-decoration: none;
 }
-.accordion .accordion-toggle {
-  color: #00aeef;
-  display: block;
-}
-.accordion .accordion-toggle:hover {
-  color: #23c3ff;
-}
-.accordion .accordion-toggle .arrow {
-  position: relative;
-  top: -2px;
-}
-.accordion .accordion-body {
-  display: none;
-  margin-top: 10px;
-}
-.accordion .accordion-body li {
-  color: #3f3f3f;
-  float: left;
-  font-style: italic;
-  padding: 0 0 5px 0;
-  width: 33%;
-}
 .arrow {
   display: inline-block;
   height: 0px;
