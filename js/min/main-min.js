@@ -2242,6 +2242,12 @@ $(document).ready(function(){
                     var absTime = parseInt(time[0]) + ":" + time[1];
                     context.find('li[data-value="'+ absTime +'"]').click();
                     $('div.dk-select').removeClass('dk-select-open-down');
+
+                    // If dropkick isn't initiated manually grab the proper select
+                    if(optionArray.length == 0){
+                        var toFind = 'option[value="' + absTime + '"]';
+                        context.find(toFind).attr('selected', 'selected');
+                    }
                 }
             }
         })
