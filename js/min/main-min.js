@@ -1886,6 +1886,7 @@ $(document).ready(function(){
 // ############ Page Configuration ############
     
     // Populate the Time Selects
+    
     var hourInput = $('.12-hour');
     $.each(hourInput, function(index, value) {
         for (i = 1; i < 13; i++) {
@@ -2035,6 +2036,7 @@ $(document).ready(function(){
                 // Configure the Time Zone to match the record  
                 function populateTimezone(){
                     var TZ = pageData.Items[0].Data[4].Value;
+                    var isDropkick;
 
                     // Make Sure this is the time zone field
                     if(pageData.Items[0].Data[4].Value != "TimeZone"){
@@ -2062,6 +2064,15 @@ $(document).ready(function(){
                                 }     
                             }
                         }); 
+
+                        isDropkick = $('#time-zone').find('.dk-option-selected');
+                        if(isDropkick.length == 0){
+                            var toFind = 'option[value="' + TZ + '"]';
+                            // debugger;
+                            $('#time-zone').find(toFind).attr('selected', 'selected');
+                        }
+
+
                     } else {
                         console.log("Error: Time Zone Not Updating with Correct Data");
                     }
@@ -2238,9 +2249,15 @@ $(document).ready(function(){
 
     // Update Time Zone
     function updateTimezone(){
-        context = $('#time-zone');
-        console.log('updating');
-        var newTime = $('#time-zone').find('.dk-option-selected').attr('data-value');
+        var newTime;
+        var context = $('#time-zone');
+        var isDropkick = $('#time-zone').find('.dk-option-selected');
+        if(isDropkick.length != 0){
+           newTime = $('#time-zone').find('.dk-option-selected').attr('data-value'); 
+        } else {
+            newTime = $('#time-zone').find('select').val();
+        }
+        
         updateContact('TimeZone', newTime);
         displayMsg(context, 'Update Successful', false);
     }
@@ -2261,7 +2278,7 @@ $(document).ready(function(){
                 
                 $.each(newListArray, function(index, value){
                     flag = validateNumber(value);
-                    console.log(flag);
+                    // console.log(flag);
                     if(flag == -1){
                         displayMsg(context, "Please enter ten digits numbers separated by commas and no spaces", true);
                         flagArray.push(flag);
@@ -2276,11 +2293,10 @@ $(document).ready(function(){
             }
             if( flagArray.length == 0) {
                 displayMsg(context, "Update Successful", false);
-                console.log(newCallList);
+                // console.log(newCallList);
                 updateContact("WhosOnCall",newCallList);
             }
         }  
-
     }
 
     function updateTransferNumber(){
