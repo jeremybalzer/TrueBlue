@@ -1065,6 +1065,12 @@ section.unlocked .screen .padlock {
 #onoff .onoffswitch-inner:after {
   content: "Off";
 }
+#yesno .onoffswitch-inner:before {
+  content: "No";
+}
+#yesno .onoffswitch-inner:after {
+  content: "Yes";
+}
 header {
   background-color: #414141;
   border-bottom: solid 4px #00aeef;

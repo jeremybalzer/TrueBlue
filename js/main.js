@@ -161,7 +161,7 @@ $(document).ready(function(){
                     // Make Sure this is the time zone field
                     if(pageData.Items[0].Data[4].Value != "TimeZone"){
                         console.log('Time Zone Updating Correctly');
-                        if(-5 < TZ || TZ < -11){
+                        if(-4 < TZ || TZ < -10){
                             console.log('Error: Returned Time Zone is Outside Current Options');
                         }
 
@@ -615,7 +615,7 @@ $(document).ready(function(){
 
     function validateNumber(number){
 
-        number = parseInt(number.toString().replace(/\s+/g, ''));
+        number = parseInt(number.toString().replace(/\D/g, ''));
         console.log(number);
         isNumber = isNaN(number);
         console.log(isNumber);

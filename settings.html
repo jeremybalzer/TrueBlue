@@ -79,13 +79,23 @@
             <p>Select the proper time zone for this branch's location</p>
             <form>
               <select class="block dropkick">
-                <option value="-5">(GMT -5:00) Eastern Time (US &amp; Canada)</option>
-                <option value="-6">(GMT -6:00) Central Time (US &amp; Canada)</option>
-                <option value="-7">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
-                <option value="-8">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
-                <option value="-9">(GMT -9:00) Alaska</option>
-                <option value="-10">(GMT -10:00) Hawaii</option>
+                <option value="-4">Eastern Standard Time (US &amp; Canada)</option>
+                <option value="-5">Central Standard Time (US &amp; Canada)</option>
+                <option value="-6">Mountain Standard Time (US &amp; Canada)</option>
+                <option value="-7">Pacific Standard Time (US &amp; Canada)</option>
+                <option value="-8">Alaskan Standard Time</option>
+                <option value="-9">Hawaiian Standard Time</option>
               </select>
+              <div class="row">
+                <p>Adjust for Daylight Savings Time?</p>
+                <div id="yesno" class="onoffswitch">
+                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-0" data-time="am" checked>
+                  <label class="onoffswitch-label" for="myonoffswitch-0">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
               <input type="button" class="submit" value="Update">
             </form>
             <p class="message"></p>
