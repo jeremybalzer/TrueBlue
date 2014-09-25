@@ -166,9 +166,8 @@ $(document).ready(function(){
 
                     if(adjust == "True" || adjust == "False"){
                         if(adjust == "True"){
-                            $('#myonoffswitch-0').attr('data-attr', 'True');
                             $('#time-zone').find('.onoffswitch-checkbox').click();
-                        }
+                        } 
                     } else {
                         console.log('ERROR: DST Adjust is not equal to True or False');
                     }
