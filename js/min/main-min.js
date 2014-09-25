@@ -1929,6 +1929,10 @@ $(document).ready(function(){
             that.attr('data-boolean', "off");
         } else if (that.attr('data-boolean') == "off"){
             that.attr('data-boolean', "on");
+        } else if (that.attr('data-attr') == "True"){
+            that.attr('data-attr', "False");
+        } else if (that.attr('data-attr') == "False"){
+            that.attr('data-attr', "True");
         }
     })
 
@@ -1989,7 +1993,8 @@ $(document).ready(function(){
                     'TN Backup Phone',
                     'OpenHoursTo',
                     'OpenHoursFrom',
-                    'WhosOnCall'
+                    'WhosOnCall',
+                    'UseDST'
                 ]
             }),
             headers: {
@@ -2030,7 +2035,17 @@ $(document).ready(function(){
                 // Configure the Time Zone to match the record  
                 function populateTimezone(){
                     var TZ = pageData.Items[0].Data[4].Value;
+                    var adjust = pageData.Items[0].Data[11].Value;
                     var isDropkick;
+
+                    if(adjust == "True" || adjust == "False"){
+                        if(adjust == "True"){
+                            $('#myonoffswitch-0').attr('data-attr', 'True');
+                            $('#time-zone').find('.onoffswitch-checkbox').click();
+                        }
+                    } else {
+                        console.log('ERROR: DST Adjust is not equal to True or False');
+                    }
 
                     // Make Sure this is the time zone field
                     if(pageData.Items[0].Data[4].Value != "TimeZone"){
@@ -2270,12 +2285,15 @@ $(document).ready(function(){
         var newTime;
         var context = $('#time-zone');
         var isDropkick = $('#time-zone').find('.dk-option-selected');
+        var adjust = $('#myonoffswitch-0').attr('data-attr');
+
         if(isDropkick.length != 0){
            newTime = $('#time-zone').find('.dk-option-selected').attr('data-value'); 
         } else {
             newTime = $('#time-zone').find('select').val();
         }
         
+        updateContact('UseDST', adjust);
         updateContact('TimeZone', newTime);
         displayMsg(context, 'Update Successful', false);
     }
