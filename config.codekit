@@ -90,6 +90,39 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
+	"\/js\/libs\/min\/jquery-crossdomain.js": {
+		"fileType": 64,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/js\/libs\/min\/jquery-crossdomain.js",
+		"outputAbbreviatedPath": "\/js\/libs\/min\/min\/jquery-crossdomain-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/js\/libs\/min\/min\/modernizer-min-min.js": {
+		"fileType": 64,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/js\/libs\/min\/min\/modernizer-min-min.js",
+		"outputAbbreviatedPath": "\/js\/libs\/min\/min\/min\/modernizer-min-min-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/js\/libs\/min\/modernizer-min.js": {
+		"fileType": 64,
+		"ignore": 1,
+		"ignoreWasSetByUser": 1,
+		"inputAbbreviatedPath": "\/js\/libs\/min\/modernizer-min.js",
+		"outputAbbreviatedPath": "\/js\/libs\/min\/min\/modernizer-min-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 0,
+		"syntaxCheckerStyle": 0
+		},
 	"\/js\/libs\/moment.js": {
 		"fileType": 64,
 		"ignore": 1,
@@ -518,32 +551,38 @@
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/moment.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/min\/jquery-crossdomain.js",
 			"position": 1,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/moment.js",
 			"position": 2,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday-jquery.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday.js",
 			"position": 3,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday-jquery.js",
 			"position": 4,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick-jquery.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick.js",
 			"position": 5,
+			"type": 0
+			},
+		{
+			"followForSyntaxChecking": 1,
+			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick-jquery.js",
+			"position": 6,
 			"type": 0
 			}
 		]

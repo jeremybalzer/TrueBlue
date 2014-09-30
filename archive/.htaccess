@@ -1,0 +1,3 @@
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://local.trueblue.com/$1 [R=301,L]

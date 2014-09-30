@@ -4,15 +4,19 @@ var ID;
 
 $(document).ready(function(){
 
+    function trace(s) {
+      try { console.log(s) } catch (e) { alert(s) }
+    }
+
 // ############ Variables ############
     // var pageData, hourInput;
     // var ID;
     var updateURL = "https://wapi.onereach.com/api/contact";
+    console.log(updateURL);
 
 // ############ Page Configuration ############
     
     // Populate the Time Selects
-    
     var hourInput = $('.12-hour');
     $.each(hourInput, function(index, value) {
         for (i = 1; i < 13; i++) {
@@ -60,7 +64,7 @@ $(document).ready(function(){
         } else if (that.attr('data-attr') == "False"){
             that.attr('data-attr', "True");
         }
-    })
+    });
 
     // Update Records
     $('#time-zone').find('input.submit').on('click', updateTimezone);
@@ -78,23 +82,50 @@ $(document).ready(function(){
         
         $.support.cors = true;
 
-        $.ajax({
-            crossDomain: true,
-            url: "https://wapi.onereach.com/api/login",
-            headers:{
-                username: user,
-                password: pword
-            },
-            error: function(data, err, msg){
-                console.log(msg);
-            },
-            success: function(data){
-                // Store the Reponse to run the second login
-                // console.log(data);
-                mobileNum = data.User.MobileNumber;
-                queryContacts(data);
-            }
-        });
+        // TO REMOVE
+        // $('#login-screen').addClass('hidden');
+        // $('#settings').removeClass('hidden');
+
+        if ('XDomainRequest' in window && window.XDomainRequest !== null) {
+            var xdr = new XDomainRequest(); // Use Microsoft XDR
+            xdr.open('get', "https://wapi.onereach.com/api/login");
+            xdr.onload = function () {
+                var dom  = new ActiveXObject('Microsoft.XMLDOM'),
+                    JSON = $.parseJSON(xdr.responseText);
+
+                dom.async = false;
+
+                if (JSON == null || typeof (JSON) == 'undefined') {
+                    JSON = $.parseJSON(data.firstChild.textContent);
+                }
+                debugger;
+                queryContacts(JSON); // internal function
+            };
+
+            xdr.onerror = function() {
+                _result = false;  
+            };
+
+            xdr.send();
+        } else {
+            $.ajax({
+                crossDomain: true,
+                url: "https://wapi.onereach.com/api/login",
+                headers:{
+                    username: user,
+                    password: pword
+                },
+                error: function(data, err, msg){
+                    console.log(msg);
+                },
+                success: function(data){
+                    // Store the Reponse to run the second login
+                    // console.log(data);
+                    mobileNum = data.User.MobileNumber;
+                    queryContacts(data);
+                }
+            });
+        }
     };
 
     // Run the second ajax query to get the contact info
