@@ -12,7 +12,7 @@ $(document).ready(function(){
     // var pageData, hourInput;
     // var ID;
     var updateURL = "https://wapi.onereach.com/api/contact";
-    console.log(updateURL);
+    // console.log(updateURL);
 
 // ############ Page Configuration ############
     
@@ -33,13 +33,9 @@ $(document).ready(function(){
 
     var selectArray = $('.dropkick');
 
-    // Hard Code in login data temporarily
-    $('#username').val('branch1107@trueblue.com'); 
-    $('#password').val('w3Lcome'); 
-
 // ############ Attach Click Handlers ############
 
-    // Login the User using AJAX
+//     // Login the User using AJAX
     $('#login').on('click', userLogin);
 
     // Toggle the Locked Sections
@@ -73,40 +69,17 @@ $(document).ready(function(){
     $('#on-call').find('input.submit').on('click', updateCallList);
     $('#transfer-number').find('input.submit').on('click', updateTransferNumber);
 
-// ############ Functions ############
+// // ############ Functions ############
 
-    // Log in a user
+//     // Log in a user
     function userLogin(){
         var user = $('#username').val();
         var pword = $("#password").val();
         
         $.support.cors = true;
 
-        // TO REMOVE
-        // $('#login-screen').addClass('hidden');
-        // $('#settings').removeClass('hidden');
-
         if ('XDomainRequest' in window && window.XDomainRequest !== null) {
-            var xdr = new XDomainRequest(); // Use Microsoft XDR
-            xdr.open('get', "https://wapi.onereach.com/api/login");
-            xdr.onload = function () {
-                var dom  = new ActiveXObject('Microsoft.XMLDOM'),
-                    JSON = $.parseJSON(xdr.responseText);
-
-                dom.async = false;
-
-                if (JSON == null || typeof (JSON) == 'undefined') {
-                    JSON = $.parseJSON(data.firstChild.textContent);
-                }
-                debugger;
-                queryContacts(JSON); // internal function
-            };
-
-            xdr.onerror = function() {
-                _result = false;  
-            };
-
-            xdr.send();
+            alert('Your Browser is not compatible. Please upgrade to a modern browser.');
         } else {
             $.ajax({
                 crossDomain: true,
@@ -120,7 +93,7 @@ $(document).ready(function(){
                 },
                 success: function(data){
                     // Store the Reponse to run the second login
-                    // console.log(data);
+                    console.log(data);
                     mobileNum = data.User.MobileNumber;
                     queryContacts(data);
                 }
