@@ -45,6 +45,9 @@ form {
 		background-color: @white;
 		border: solid 1px @text;
 		color: lighten(@text, 25%);
+		position: absolute;
+		bottom: 0px;
+		right: 20px;
 
 		&:hover, &:active {
 			color: @text;
@@ -63,7 +66,12 @@ form {
 
 	textarea {
 		box-shadow: 2px 2px 1px @white;
+		color: #a9a9a9;
 		width: 100%;
+
+		&:focus {
+			color: @black;
+		}
 	}
 
 	div.row {
@@ -100,35 +108,15 @@ form {
 					float: right;
 				}
 				.dk-select {
-					float: right;
+					float: left;
 				}
 			}
 
 			.dk-select {
-				width: 100%;
+				float: left;
+				// margin-right: 10px;
+				
 			}
-
-			// .am-pm {
-			// 	.dk-selected {
-			// 		background-color: @blue;
-			// 		color: @white;
-			// 		text-align: center;
-			// 		padding: 0 3px;
-			// 	}
-			// 	.dk-selected:after, .dk-selected:before {
-			// 		content: none;
-			// 	}
-			// 	display: block;
-			// 	position: absolute;
-			// 	bottom: 0;
-			// 	right: 0;
-			// 	width: 35px;
-			// 	z-index: 10;
-			// }
-
-			// select.am-pm {
-			// 	display: none;
-			// }
 		}
 	}
 }

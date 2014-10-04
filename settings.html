@@ -5,6 +5,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TrueBlue IVR Settings</title>
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="style.css">
     <script src="js/libs/min/modernizer-min.js"></script>
   </head>
@@ -16,8 +17,8 @@
           <img src="img/logo.jpg" alt="Trueblue"/>
           <div>
             <span class="location"></span>
-            <span id="location-phone"></span>
             <span>IVR Settings</span>
+            <span id="location-phone"></span>
           </div>
         </div>
       </header>
@@ -205,7 +206,7 @@
         <section id="on-call" class="locked">
           <div class="wrapper">
             <h1>Who is on call?</h1>
-            <p>Enter the phone numbers of those who should receive voicemail notifications (10 digit numbers only, separated with commas and no spaces)</p>
+            <p>Enter the phone numbers of those who should receive voicemail notifications (10 digit numbers only, separated by commas)</p>
             <form>
               <textarea id="call-list" rows="4" placeholder="1111111111,2222222222,3333333333"></textarea>
               <input type="button" class="submit" value="Update">
@@ -221,7 +222,7 @@
         <section id="transfer-number" class="locked">
           <div class="wrapper">
             <h1>Transfer Number</h1>
-            <p>What number should be used when the branch is unable to take calls? (10 digit numbers only, separated with commas and no spaces)</p>
+            <p>What number should be used when the branch is unable to take calls? (10 digit numbers only, separated by commas)</p>
             <form>
               <input id="update-number" type="text" placeholder="9999999999">
               <div id="onoff" class="onoffswitch">

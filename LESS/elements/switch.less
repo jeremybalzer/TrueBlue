@@ -1,9 +1,16 @@
 .onoffswitch {
-    clear: both;
-    margin-top: 10px;
+    // clear: both;
+    float: left;
+    margin-left: 4px;
     position: relative; 
-    width: 80px;
+    width: 54px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+
+#time-zone, #transfer-number {
+    .onoffswitch {
+        margin-left: 0px;       
+    }
 }
 .onoffswitch-checkbox {
     display: none;
@@ -26,23 +33,23 @@
 }
 .onoffswitch-inner:before {
     content: "AM";
-    padding-left: 16px;
+    padding-left: 8px;
     background-color: #FFFFFF; 
     color: #3F3F3F;
 }
 .onoffswitch-inner:after {
     content: "PM";
-    padding-right: 16px;
+    padding-right: 8px;
     background-color: #FFFFFF; 
     color: #3F3F3F;
     text-align: right;
 }
 .onoffswitch-switch {
-    display: block; width: 14px; margin: 0px;
+    display: block; width: 10px; margin: 0px;
     // background: #FFFFFF;
     background: @blue;
     border: 2px solid @blue; border-radius: 0px;
-    position: absolute; top: 0; bottom: 0; right: 62px;
+    position: absolute; top: 0; bottom: 0; right: 40px;
     -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
     -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
     background-image: -moz-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%);

@@ -33,6 +33,9 @@ $(document).ready(function(){
 
     var selectArray = $('.dropkick');
 
+    $('#username').val('branch1107@trueblue.com');
+    $('#password').val('w3Lcome');
+
 // ############ Attach Click Handlers ############
 
 //     // Login the User using AJAX
@@ -154,11 +157,10 @@ $(document).ready(function(){
 
                 // Populate the Header
                 function populateHeader(){
-                    $('span.location').html(pageData.Items[0].Data[1].Value);
+                    $('span.location').html(pageData.Items[0].Data[1].Value + " Office");
+                    $('span.location + span').html('IVR Settings for:');
                     $('#location-phone').html(
-                        data.User.MobileNumber.slice(0,3) + "-" + 
-                        data.User.MobileNumber.slice(3,6) + "-" + 
-                        data.User.MobileNumber.slice(6,10)
+                        formatPhoneNumber(data.User.MobileNumber)
                     );
                 };
                   
@@ -351,19 +353,28 @@ $(document).ready(function(){
 
                 // Configure Who is on Call
                 function populateWhoIsOnCall(){
-                    $('#call-list').val(pageData.Items[0].Data[7].Value);
+                    var newNums= [];
+                    var nums = pageData.Items[0].Data[7].Value;
+                    nums = nums.split(",");
+                    $.each(nums, function(index,value){
+                        var newNum = formatPhoneNumber(value);
+                        newNums.push(newNum);
+                    });
+                    newNums = newNums.join(", ");
+                    $('#call-list').val(newNums);
                 }
 
                 // Configure the Transfer Number to match the record
                 function populateTransferNumber(){
                     var status = pageData.Items[0].Data[2].Value; 
+                    var number = formatPhoneNumber(pageData.Items[0].Data[3].Value);
                     if(status != ""){
                         if(status == "on"){
                            $('#myonoffswitch-5').click().attr('data-boolean', status); 
                         }
                     } 
 
-                    $('#update-number').attr('placeholder', 'Current: ' + pageData.Items[0].Data[3].Value);
+                    $('#update-number').attr('placeholder', 'Current: ' + number);
                 }
 
 
@@ -585,19 +596,21 @@ $(document).ready(function(){
     }
 
     function displayMsg(context, msg, isError){
-        var color;
+        var color, align;
 
         if(isError == true) {
             // Error Messages get left on screen
             color = "#ff0000";
+            align = "left";
         } else {
+            align = "right";
             color = "#00AEEF";
             // Hide a successful message after it updates
             setTimeout(function(){
                context.find('.message').fadeOut(300);
             }, 2500);
         }
-        context.find('.message').html(msg).show().css('color', color);
+        context.find('.message').html(msg).show().css({'color': color, 'text-align': align});
     }
 
     function formatTime(time, halfday){
@@ -634,8 +647,11 @@ $(document).ready(function(){
         }
     }
 
+    function formatPhoneNumber(number){
+        number = "(" + number.slice(0,3) + ") " + number.slice(3,6) + "-" + number.slice(6,10);
+        return number;
+    }
     function validateNumber(number){
-
         number = parseInt(number.toString().replace(/\D/g, ''));
         console.log(number);
         isNumber = isNaN(number);
