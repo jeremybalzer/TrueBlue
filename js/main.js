@@ -33,9 +33,6 @@ $(document).ready(function(){
 
     var selectArray = $('.dropkick');
 
-    $('#username').val('branch1107@trueblue.com');
-    $('#password').val('w3Lcome');
-
 // ############ Attach Click Handlers ############
 
 //     // Login the User using AJAX
@@ -141,6 +138,7 @@ $(document).ready(function(){
                 // $('.dropkick').click();
                 $('#login-screen').addClass('hidden');
                 $('#settings').removeClass('hidden');
+                $('.container').css('background-color', '#eee');
             },
             success: function(response){
                 pageData = response;
@@ -609,6 +607,7 @@ $(document).ready(function(){
             setTimeout(function(){
                context.find('.message').fadeOut(300);
             }, 2500);
+            context.find('.padlock').click();
         }
         context.find('.message').html(msg).show().css({'color': color, 'text-align': align});
     }
@@ -651,6 +650,7 @@ $(document).ready(function(){
         number = "(" + number.slice(0,3) + ") " + number.slice(3,6) + "-" + number.slice(6,10);
         return number;
     }
+
     function validateNumber(number){
         number = parseInt(number.toString().replace(/\D/g, ''));
         console.log(number);
