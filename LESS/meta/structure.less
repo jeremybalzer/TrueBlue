@@ -102,15 +102,26 @@ header, footer {
 }
 
 @media all and (max-width: 768px){
+	.main {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
 	section {
 		border-bottom: solid 1px @blue;
 		border-radius: 0px;
 		float: none;
 		margin: 0% !important;
+		min-height: 0px;
+		padding-bottom: 50px;
 		width: 100%;
 
 		&:last-of-type {
 			border-bottom: none;
+		}
+
+		select.block.dropkick {
+			margin-bottom: 10px;
 		}
 	}
 }

@@ -44,6 +44,18 @@
         </section>
       </div>
 
+      <div  class="main">
+        <div class="wrapper">
+          <h1>Select Your Branch</h1>
+          <form>
+            <select class="dropkick" id="branch-select">
+              <!-- This gets populated with the branches via javascript -->
+            </select>
+            <input type="button" class="submit" value="Load Branch" style="position: static;"/>
+          </form>
+        </div>
+      </div>
+
       <main id="settings" role="main" class="main hidden">
         <!-- Select Audio for the main greeting -->
         <!-- <section class="locked">
@@ -91,7 +103,7 @@
               <div class="row">
                 <p>Adjust for Daylight Savings Time?</p>
                 <div id="yesno" class="onoffswitch">
-                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-0" data-attr="False" checked>
+                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch-0" data-attr="True">
                   <label class="onoffswitch-label" for="myonoffswitch-0">
                     <span class="onoffswitch-inner"></span>
                     <span class="onoffswitch-switch"></span>
@@ -111,7 +123,7 @@
         <section id="open-hours" class="locked">
           <div class="wrapper">
             <h1>Open Hours</h1>
-            <p>Set the IVR to use the Open Hours flow during the following time:</p>
+            <p>Enter your hours of operation.  Calls will be forwarded to the Message Center outside these hours.</p>
             <form>
               <div class="row">
                 <div id="open-from" class="column">
@@ -206,7 +218,7 @@
         <section id="on-call" class="locked">
           <div class="wrapper">
             <h1>Who is on call?</h1>
-            <p>Enter the phone numbers of those who should receive voicemail notifications (10 digit numbers only, separated by commas)</p>
+            <p>Enter mobile numbers for those who would like to receive voicemail notifications by text.  (10-digit numbers only, separated by commas)</p>
             <form>
               <textarea id="call-list" rows="4" placeholder="1111111111,2222222222,3333333333"></textarea>
               <input type="button" class="submit" value="Update">
@@ -221,8 +233,8 @@
         <!-- Set a transfer number -->
         <section id="transfer-number" class="locked">
           <div class="wrapper">
-            <h1>Transfer Number</h1>
-            <p>What number should be used when the branch is unable to take calls? (10 digit numbers only, separated by commas)</p>
+            <h1>Daytime Transfer Number</h1>
+            <p>Enter the phone number for the branch that will answer your calls while you are away. (10 digit numbers only, separated by commas)</p>
             <form>
               <input id="update-number" type="text" placeholder="9999999999">
               <div id="onoff" class="onoffswitch">
@@ -249,6 +261,6 @@
       </footer>
 
     </div>
-    <script src="js/min/main-min.js"></script>
+    <script src="js/main-min.js"></script>
   </body>
 </html>
