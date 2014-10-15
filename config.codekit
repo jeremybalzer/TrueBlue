@@ -88,6 +88,17 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
+	"\/js\/libs\/lo-dash.js": {
+		"fileType": 64,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/js\/libs\/lo-dash.js",
+		"outputAbbreviatedPath": "\/js\/libs\/min\/lo-dash-min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
 	"\/js\/libs\/min\/dropkick-min.js": {
 		"fileType": 64,
 		"ignore": 1,
@@ -184,7 +195,7 @@
 		"outputAbbreviatedPath": "\/js\/main-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 1,
-		"outputStyle": 1,
+		"outputStyle": 0,
 		"syntaxCheckerStyle": 0
 		},
 	"\/LESS\/elements\/arrow.less": {
@@ -551,32 +562,38 @@
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/moment.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/lo-dash.js",
 			"position": 1,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/moment.js",
 			"position": 2,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick-jquery.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick.js",
 			"position": 3,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/dropkick-jquery.js",
 			"position": 4,
 			"type": 0
 			},
 		{
 			"followForSyntaxChecking": 1,
-			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday-jquery.js",
+			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday.js",
 			"position": 5,
+			"type": 0
+			},
+		{
+			"followForSyntaxChecking": 1,
+			"linkedFileAbbreviatedPath": "\/js\/libs\/pikaday-jquery.js",
+			"position": 6,
 			"type": 0
 			}
 		]

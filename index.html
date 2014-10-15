@@ -23,71 +23,23 @@
         </div>
       </header>
 
-      <div id="login-screen" class="main">
-        <!-- Login Screen -->
-        <section class="login">
-            <div class="wrapper">
-                <h1>Please log in</h1>
-                <p>Use your OneReach credentials to log in and update your IVR settings</p>
-                <form>
-                    <input id="username" type="text" placeholder="username">
-                    <input id="password" type="password" placeholder="password">
-                    <input id="login" class="submit" type="button" value="Login">
-                </form>
-                <!-- Include support number / email  -->
-                <p>Problems logging in?</p> 
-                <p>Contact Us:
-                  <a href="mailto:support@onereach.com">support@onereach.com</a> | <a href="tel:3039747351">(303) 974-7351</a>
-                </p>
-                
-            </div>
-        </section>
-      </div>
+      <main id="settings" role="main" class="main">
 
-      <div  class="main">
-        <div class="wrapper">
-          <h1>Select Your Branch</h1>
-          <form>
-            <select class="dropkick" id="branch-select">
-              <!-- This gets populated with the branches via javascript -->
-            </select>
-            <input type="button" class="submit" value="Load Branch" style="position: static;"/>
-          </form>
-        </div>
-      </div>
-
-      <main id="settings" role="main" class="main hidden">
-        <!-- Select Audio for the main greeting -->
-        <!-- <section class="locked">
+        <!-- Create a select element for the branches -->
+        <section id="branch">
           <div class="wrapper">
-            <h1>Record Audio</h1>
-
-            <form action="" method="" action="" name="mp3">
-              <select class="dropkick">
-                <option>Option</option>
-                <option>Option</option>
-                <option>Option</option>
-                <option>Option</option>
+            <h1>Select Your Branch</h1>
+            <form>
+              <select class="dropkick" id="branch-select">
+                <!-- This gets populated with the branches via javascript -->
               </select>
-
-              <p>Enter the full web address (including http:) of the MP3 file to use for this greeting.</p>
-
-              <div class="row">
-                <input id="mp3" type="url" placeholder="web address of the mp3">
-                <input class="overlay" type="button" value="Listen">
-              </div>
+              <input id="load-branch" type="button" class="submit" value="Load Branch"/>
             </form>
-
-            <p class="message">This is how validation error notices will look</p>
-
-            <div class="screen">
-              <a href="#" class="padlock"></a>
-            </div>
           </div>
-        </section> -->
+        </section>
 
         <!-- Set the time zone for this location-->
-        <section id="time-zone" class="locked">
+        <section id="time-zone" class="locked hidden">
           <div class="wrapper">
             <h1>Time Zone</h1>
             <p>Select the proper time zone for this branch's location</p>
@@ -120,7 +72,7 @@
         </section>
 
         <!-- Set the IVR's Open Hours Flow for these times  -->
-        <section id="open-hours" class="locked">
+        <section id="open-hours" class="locked hidden">
           <div class="wrapper">
             <h1>Open Hours</h1>
             <p>Enter your hours of operation.  Calls will be forwarded to the Message Center outside these hours.</p>
@@ -169,13 +121,21 @@
         </section>
 
         <!-- Configure the IVR's Open Hours Flow on Specific Days and Times -->
-        <section id="temp-hours" class="locked">
+        <section id="temp-hours" class="locked hidden">
           <div class="wrapper">
             <h1>Temporary Open Hours</h1>
             <p>Set the IVR to use the Open Hours flow on the following day and times:</p>
             <form>
-              <label>Which day:</label>
-              <input class="datepicker" type="text" placeholder="yyyy-mm-dd" readonly>
+              <div class="row">
+                <div id="temp-date-from" class="column">
+                  <label>From:</label>
+                  <input class="datepicker" type="text" placeholder="yyyy-mm-dd" readonly>
+                </div>
+                 <div id="temp-date-to" class="column">
+                  <label>To:</label>
+                  <input class="datepicker" type="text" placeholder="yyyy-mm-dd" readonly>
+                </div>
+              </div>
 
               <div class="row">
                 <div id="temp-open-from" class="column">
@@ -215,7 +175,7 @@
         </section>
 
         <!-- Configure voicemail notifications -->
-        <section id="on-call" class="locked">
+        <section id="on-call" class="locked hidden">
           <div class="wrapper">
             <h1>Who is on call?</h1>
             <p>Enter mobile numbers for those who would like to receive voicemail notifications by text.  (10-digit numbers only, separated by commas)</p>
@@ -231,7 +191,7 @@
         </section>
 
         <!-- Set a transfer number -->
-        <section id="transfer-number" class="locked">
+        <section id="transfer-number" class="locked hidden" >
           <div class="wrapper">
             <h1>Daytime Transfer Number</h1>
             <p>Enter the phone number for the branch that will answer your calls while you are away. (10 digit numbers only, separated by commas)</p>
