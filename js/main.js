@@ -28,24 +28,21 @@ $(document).ready(function(){
 
     // ############ Variables ############
     var apiURL = "https://ent-wapi.onereach.com/";
-    // var selectArray = $('.dropkick');
-
-
 
     // ############ Attach Click Handlers ############
     $('#load-branch').on('click', loadBranch);
 
     // Update Records
-    // $('#time-zone').find('input.submit').on('click', updateTimezone);
-    // $('#open-hours').find('input.submit').on('click', updateOpenHours);
-    // $('#temp-hours').find('input.submit').on('click', updateTempHours);
-    // $('#on-call').find('input.submit').on('click', updateCallList);
-    // $('#transfer-number').find('input.submit').on('click', updateTransferNumber);
+    $('#time-zone').find('input.submit').on('click', updateTimezone);
+    $('#open-hours').find('input.submit').on('click', updateOpenHours);
+    $('#temp-hours').find('input.submit').on('click', updateTempHours);
+    $('#on-call').find('input.submit').on('click', updateCallList);
+    $('#transfer-number').find('input.submit').on('click', updateTransferNumber);
 
-    // $('input.submit').on('click', function(){
-    //     var sec = $(this).closest('section');
-    //     togglePadlock(sec);
-    // });
+    $('input.submit').on('click', function(){
+        var sec = $(this).closest('section');
+        togglePadlock(sec);
+    });
 
     // Toggle Padlocks
     $('.padlock').on('click', function(){
@@ -107,9 +104,11 @@ $(document).ready(function(){
             error: function(data, err, msg){
                 console.log(msg);
             },
+            complete: function(response){
+                loadBranches();
+            },
             success: function(response){
                 pageData = response;
-                loadBranches();
                 populateTimeSelects();
             }
         });
@@ -118,15 +117,28 @@ $(document).ready(function(){
     function loadBranches(){
         console.log(pageData);
         var optionList = "";
+        var optionArray = [];
+        var homeBranch;
+        var isKicked;
 
         // For each branch build a select
         $.each(pageData.Items, function(index, value){
             // console.log(value);
             var option = "<option data-attr='" + value.Id + "'>Branch " + value.Data[0].Value + ": " + value.Data[1].Value + "</option>"; 
-            optionList = optionList + option;
+            var opObj = {
+                element: option,
+                name: value.Data[1].Value,
+                key: value.Data[0].Value
+            }
+            
+            optionArray.push(opObj);
         });
 
-        // Attach options to branch select
+        optionArray = _.sortBy(optionArray, 'name');
+        $.each(optionArray, function(index, value){
+            optionList = optionList + value.element;
+        });
+
         $('#branch-select').append(optionList).dropkick();
     }
 
@@ -134,6 +146,7 @@ $(document).ready(function(){
     function loadBranch(){
         // Grab the Branch Number
         var selected = $('#branch-select').val().slice(7,11);
+        var string = $('#branch-select').val();
 
         data = _.find(pageData.Items, function(obj){
             return obj.Data[0].Value == selected;
@@ -155,8 +168,8 @@ $(document).ready(function(){
         branchData.tempDateOpenTo = data.Data[12].Value;
         branchData.tempDateOpenFrom = data.Data[13].Value;
 
+        console.log(branchData.office);
         console.log(branchData);
-
         buildPage();
     }
 
@@ -164,7 +177,9 @@ $(document).ready(function(){
         populateHeader();
         populateTimezone();
         populateOpenHours();
-
+        populateTempDate();
+        populateTempHours();
+        populateWhoIsOnCall();
         populateTransferNumber();
         showSections();
     }
@@ -178,7 +193,7 @@ $(document).ready(function(){
         );
     };
 
-        // Configure the Time Zone to match the record  
+    // Configure the Time Zone to match the record  
     function populateTimezone(){
         var TZ = branchData.timeZone;
         var adjust = branchData.useDST;
@@ -241,8 +256,8 @@ $(document).ready(function(){
         // Get Both Times
         var oHourFrom = branchData.openHoursFrom;
         var oHourTo = branchData.openHoursTo;
-        console.log(oHourFrom);
-        console.log(oHourTo);
+        // console.log(oHourFrom);
+        // console.log(oHourTo);
         var context; 
 
         // Are times populated? 
@@ -280,6 +295,100 @@ $(document).ready(function(){
         doDropkick($('#open-to'));
     };
 
+    // Configure the Temp Hour Date to match the record
+    function populateTempDate(){
+        var fromDate = new Date(branchData.tempDateOpenFrom);
+        var toDate = new Date(branchData.tempDateOpenTo);
+        var today = new Date();
+        var pickers = $('.datepicker');
+
+
+        // Initiate the Datepicker and Select Styling Plugins
+        $(pickers[0]).pikaday({
+            format: 'MM/DD/YYYY',
+            minDate: today,
+            defaultDate: fromDate,
+            setDefaultDate: true,
+            onSelect: function(){
+                var date = document.createTextNode(this.getMoment().format('DD MM YYYY'))
+                $('.selected').html(date);
+            }
+        });
+
+        $(pickers[1]).pikaday({
+            format: 'MM/DD/YYYY',
+            minDate: today,
+            defaultDate: toDate,
+            setDefaultDate: true,
+            onSelect: function(){
+                var date = document.createTextNode(this.getMoment().format('DD MM YYYY'))
+                $('.selected').html(date);
+            }
+        });
+    }
+
+    // Configure the Temp Hours to match the record
+    function populateTempHours(){
+        // Get Both Times
+        var tempHourFrom = branchData.tempOpenHoursFrom;
+        var tempHourTo = branchData.tempOpenHoursTo;
+        var fromDate = new Date(branchData.tempDateOpenFrom);
+        var toDate = new Date(branchData.tempDateOpenTo);
+        var context;
+
+
+        // Are times populated? 
+        if(tempHourFrom != "" && tempHourTo != ""){
+
+            //is time2 later than time1? 
+            var flag = compareTime(tempHourFrom, tempHourTo);
+
+            //If times validate adjust the select elements, otherwise display an error
+            if(flag == 1){
+                context = $('#temp-open-from');
+                timeSplitter(tempHourFrom, context);
+
+                context = $('#temp-open-to');
+                timeSplitter(tempHourTo, context);
+            } 
+
+            // Times don't validate, prompt user to update them
+            else {
+                if(tempHourFrom == tempHourTo){
+                    console.log('Temp Open Hours Time From must be earlier than Time To');
+                    context = $('#temp-hours');
+                    displayMsg(context, "Please Update Temporary Open Hours", true);
+                }
+            }
+        } else {
+            $('#temp-open-from').find('.dk-selected').html('0:00');
+            $('#temp-open-to').find('.dk-selected').html('0:00');
+            context = $('#temp-hours');
+            displayMsg(context, "Please Update Temporary Open Hours", true);
+        }
+
+        doDropkick($('#temp-open-from'));
+        doDropkick($('#temp-open-to'));
+    }
+
+    // Configure Who is on Call
+    function populateWhoIsOnCall(){
+        var newNums= [];
+        var nums = branchData.whosOnCall;
+
+        nums = nums.split(",");
+        $.each(nums, function(index,value){
+            var newNum = formatPhoneNumber(value);
+            newNums.push(newNum);
+        });
+        newNums = newNums.join(", ");
+
+        if(9 < newNums.length){
+            $('#call-list').val(newNums);
+        } else {
+            $('#call-list').val('');
+        }
+    }
 
     // Configure the Transfer Number to match the record
     function populateTransferNumber(){
@@ -306,6 +415,7 @@ $(document).ready(function(){
         context.toggleClass('locked').toggleClass('unlocked');
     }
 
+    // Unhide the sections after a branch load
     function showSections(){
         var sections = $('section');
         $.each(sections, function(index, value){
@@ -316,9 +426,206 @@ $(document).ready(function(){
         })
     };
 
-    function formatPhoneNumber(number){
-        number = "(" + number.slice(0,3) + ") " + number.slice(3,6) + "-" + number.slice(6,10);
-        return number;
+    // Make an ajax request to store a new branch record
+    function updateContact(record, value, context){
+        var status;
+
+        $.ajax({
+            url: apiURL + "api/contact/" + branchData.ID,
+            type: "PUT",
+            data: JSON.stringify([
+                {Name: record, Value: value}                    
+            ]),
+            headers: {
+                username: "contact@trueblue.com",
+                password: "2532525995"
+            }, 
+            complete: function(){
+                if(status == "success"){
+                    displayMsg(context, 'Update Successful', false);
+                } else {
+                    displayMsg(context, 'Server Error: Please contact support@onereach.com', true);
+                }
+            },
+            error: function(data, err, msg) {
+                console.log(msg);
+                status = "error";
+            },
+            success: function(data){
+                console.log(data);
+                status = "success";
+            }
+        });
+    }
+          
+    // Update Time Zone
+    function updateTimezone(){
+        var newTime;
+        var context = $('#time-zone');
+        var isDropkick = $('#time-zone').find('.dk-option-selected');
+        var adjust = $('#myonoffswitch-0').attr('data-attr');
+
+        if(isDropkick.length != 0){
+           newTime = $('#time-zone').find('.dk-option-selected').attr('data-value'); 
+        } else {
+            newTime = $('#time-zone').find('select').val();
+        }
+        
+        updateContact('UseDST', adjust, context);
+        updateContact('TimeZone', newTime, context);
+    }
+
+    function updateOpenHours(){
+        var context = $('#open-hours');
+        var fromHour;
+        var fromAMPM;
+        var toHour;
+        var toAMPM;
+
+        fromHour = $('#open-from').find('.dk-option-selected').attr('data-value');
+        if(!fromHour){
+            fromHour = $('#open-from').find('select').val();
+        }
+        fromAMPM = $('#open-from').find('#myonoffswitch-1').attr('data-time');
+
+        toHour = $('#open-to').find('.dk-option-selected').attr('data-value');
+        if(!toHour){
+            toHour = $('#open-to').find('select').val();
+        }
+        toAMPM = $('#open-to').find('#myonoffswitch-2').attr('data-time');
+
+        // Convert to 24 Hour Format
+        fromHour = formatTime(fromHour, fromAMPM);
+        toHour = formatTime(toHour, toAMPM);
+
+        // Make sure from time is sooner than to time
+        timeValidate = compareTime(fromHour, toHour);
+
+        if(timeValidate == -1){
+            displayMsg(context, "Error: Closing hour can not be before opening hour", true);
+        } else {
+            updateContact('OpenHoursFrom', fromHour + ":00", context);
+            updateContact('OpenHoursTo', toHour + ":00", context);
+        }
+    };
+
+    function updateTempHours(){
+        var timeValidate;
+        var context; 
+        var fromAMPM; 
+        var fromHour; 
+        var toHour; 
+        var toAMPM; 
+        var newToDate;
+        var newFromDate;
+        var today = new Date();
+        var picker;
+
+        context = $('#temp-hours');
+        fromHour = $('#temp-open-from').find('.dk-option-selected').attr('data-value');
+        if(!fromHour){
+            fromHour = $('#temp-open-from').find('select').val();
+        }
+        fromAMPM = $('#temp-open-from').find('#myonoffswitch-3').attr('data-time');
+        toHour = $('#temp-open-to').find('.dk-option-selected').attr('data-value');
+        if(!toHour){
+            toHour = $('#temp-open-to').find('select').val();
+        }
+        toAMPM = $('#temp-open-to').find('#myonoffswitch-4').attr('data-time');
+        
+        picker = context.find('.datepicker');
+        newFromDate = $(picker[0]).val();
+        newToDate = $(picker[1]).val();
+        
+        today = today.getFullYear() + "/" + today.getMonth() + "/" + today.getDate();
+
+        if(newFromDate <= newToDate){
+            // Convert to 24 Hour Format
+            fromHour = formatTime(fromHour, fromAMPM);
+            toHour = formatTime(toHour, toAMPM);
+
+            if(newFromDate == newToDate){
+                // Make sure from time is sooner than to time
+                timeValidate = compareTime(fromHour, toHour);
+            }
+            
+            // Throw Error if no date is selected
+            if(newFromDate == "" || newToDate == ""){
+                displayMsg(context, "Please select valid dates to set temporary open hours", true); 
+            } else {
+                // Throw Error If Time Don't Validate
+                if(timeValidate == -1){
+                    displayMsg(context, "Closing hour can not be before opening hour", true);
+                } else if (
+                    $('#temp-open-from').find('.dk-selected').html() == "0:00" ||
+                    $('#temp-open-to').find('.dk-selected').html() == "0:00"
+                ){
+                    displayMsg(context, "Please select valid From and To times", true); 
+                } else {
+                    updateContact('TempOpenDateFrom', newFromDate, context);
+                    updateContact('TempOpenDateTo', newToDate, context);
+                    updateContact('TempOpenHoursFrom', fromHour + ":00", context);
+                    updateContact('TempOpenHoursTo', toHour + ":00", context);
+                }
+            }        
+        } else {
+            displayMsg(context, "From Date cannot precede To Date", true);     
+        }
+    }
+
+    function updateCallList(){
+        var context = $('#on-call');
+        var newList = $('#call-list').val();
+        var flag;
+
+        // If List is Empty Don't Submit
+        if(newList == ""){
+            displayMsg(context, "Please enter at least one ten digit number to be on call", true);
+        } else {
+            var newListArray = newList.split(",");
+            var flagArray = [];
+            var newCallList = "";
+            if(0 < newListArray.length){
+                
+                $.each(newListArray, function(index, value){
+                    flag = validateNumber(value);
+                    if(flag == -1){
+                        displayMsg(context, "Please enter ten digits numbers separated by commas and no spaces", true);
+                        flagArray.push(flag);
+                    } else {
+                        if(newCallList == "") {
+                            newCallList = flag.toString();
+                        } else {
+                            newCallList = newCallList + "," + flag;
+                        }
+                    }
+                }); 
+            }
+            if( flagArray.length == 0) {
+                updateContact("WhosOnCall",newCallList, context);
+            }
+        }  
+    }
+
+    function updateTransferNumber(){
+        var context = $('#transfer-number');
+        var newNumber = $('#update-number').val();
+        var backup = $('#myonoffswitch-5').attr('data-boolean');
+        
+        // If no new number is provided, update the Backup Needed Status
+        if(newNumber == ""){
+            updateContact('TN Backup Needed', backup, context);
+        } else {
+            var isTenDigits = validateNumber(newNumber);
+
+            if(isTenDigits == -1){
+                displayMsg(context, 'Please enter a valid ten digit number', true);
+            } else {
+                updateContact('TN Backup Phone', newNumber, context);
+                updateContact('TN Backup Needed', backup, context);
+                $('#update-number').val("").attr('placeholder', "Current: " + formatPhoneNumber(newNumber));
+            }
+        }    
     }
 });
 
@@ -362,6 +669,25 @@ function displayMsg(context, msg, isError){
         }, 2500);
     }
     context.find('.message').html(msg).show().css({'color': color, 'text-align': align});
+}
+
+function formatPhoneNumber(number){
+    number = "(" + number.slice(0,3) + ") " + number.slice(3,6) + "-" + number.slice(6,10);
+    return number;
+}
+
+function formatTime(time, halfday){
+    time = time.split(":");
+
+    if (halfday == "am" && parseInt(time[0]) == 12) {
+        time = parseInt(time[0] - 12) + ":" + time[1];
+    } else if (halfday == "pm" && parseInt(time[0]) != 12) {
+        time = parseInt(time[0]) + 12 + ":" + time[1];
+    } else {
+        time = parseInt(time[0]) + ":" + time[1];
+    }
+    // console.log(time, halfday);
+    return time;
 }
 
 function populateTimeSelects(){
@@ -423,233 +749,36 @@ function timeSplitter(time, context){
     }
 }
 
+function validateNumber(number){
+    number = parseInt(number.toString().replace(/\D/g, ''));
+    console.log(number);
+    isNumber = isNaN(number);
+    console.log(isNumber);
 
+    if(number.toString().split("").length != 10){
+        return -1;
+    } else if (isNumber == true) {
+        return -1;
+    } else {
+        return number;
+    }
+};
 
-    
-// // ############ Functions ############
-    
-    
-    // Update Time Zone
-    // function updateTimezone(){
-    //     var newTime;
-    //     var context = $('#time-zone');
-    //     var isDropkick = $('#time-zone').find('.dk-option-selected');
-    //     var adjust = $('#myonoffswitch-0').attr('data-attr');
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
 
-    //     if(isDropkick.length != 0){
-    //        newTime = $('#time-zone').find('.dk-option-selected').attr('data-value'); 
-    //     } else {
-    //         newTime = $('#time-zone').find('select').val();
-    //     }
-        
-    //     updateContact('UseDST', adjust, context);
-    //     updateContact('TimeZone', newTime, context);
-    // }
-    
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+    }
+    return "";
+}
 
-    
-
-    // function updateCallList(){
-    //     var context = $('#on-call');
-    //     var newList = $('#call-list').val();
-    //     var flag;
-
-    //     // If List is Empty Don't Submit
-    //     if(newList == ""){
-    //         displayMsg(context, "Please enter at least one ten digit number to be on call", true);
-    //     } else {
-    //         var newListArray = newList.split(",");
-    //         var flagArray = [];
-    //         var newCallList = "";
-    //         if(0 < newListArray.length){
-                
-    //             $.each(newListArray, function(index, value){
-    //                 flag = validateNumber(value);
-    //                 // console.log(flag);
-    //                 if(flag == -1){
-    //                     displayMsg(context, "Please enter ten digits numbers separated by commas and no spaces", true);
-    //                     flagArray.push(flag);
-    //                 } else {
-    //                     if(newCallList == "") {
-    //                         newCallList = flag.toString();
-    //                     } else {
-    //                         newCallList = newCallList + "," + flag;
-    //                     }
-    //                 }
-    //             }); 
-    //         }
-    //         if( flagArray.length == 0) {
-    //             updateContact("WhosOnCall",newCallList, context);
-    //         }
-    //     }  
-    // }
-
-    // function updateTransferNumber(){
-    //     var context = $('#transfer-number');
-    //     var newNumber = $('#update-number').val();
-    //     var backup = $('#myonoffswitch-5').attr('data-boolean');
-        
-    //     // If no new number is provided, update the Backup Needed Status
-    //     if(newNumber == ""){
-    //         updateContact('TN Backup Needed', backup, context);
-    //     } else {
-    //         var isTenDigits = validateNumber(newNumber);
-
-    //         if(isTenDigits == -1){
-    //             displayMsg(context, 'Please enter a valid ten digit number', true);
-    //         } else {
-    //             updateContact('TN Backup Phone', newNumber, context);
-    //             updateContact('TN Backup Needed', backup, context);
-    //             $('#update-number').val("").attr('placeholder', "Current: " + formatPhoneNumber(newNumber));
-    //         }
-    //     }    
-    // }
-
-    // function updateOpenHours(){
-    //     var context = $('#open-hours');
-    //     var fromHour;
-    //     var fromAMPM;
-    //     var toHour;
-    //     var toAMPM;
-
-    //     fromHour = $('#open-from').find('.dk-option-selected').attr('data-value');
-    //     if(!fromHour){
-    //         fromHour = $('#open-from').find('select').val();
-    //     }
-    //     fromAMPM = $('#open-from').find('#myonoffswitch-1').attr('data-time');
-
-    //     toHour = $('#open-to').find('.dk-option-selected').attr('data-value');
-    //     if(!toHour){
-    //         toHour = $('#open-to').find('select').val();
-    //     }
-    //     toAMPM = $('#open-to').find('#myonoffswitch-2').attr('data-time');
-
-    //     // Convert to 24 Hour Format
-    //     fromHour = formatTime(fromHour, fromAMPM);
-    //     toHour = formatTime(toHour, toAMPM);
-
-    //     // Make sure from time is sooner than to time
-    //     timeValidate = compareTime(fromHour, toHour);
-
-    //     if(timeValidate == -1){
-    //         displayMsg(context, "Error: Closing hour can not be before opening hour", true);
-    //     } else {
-    //         updateContact('OpenHoursFrom', fromHour, context);
-    //         updateContact('OpenHoursTo', toHour, context);
-    //     }
-        
-    // };
-
-    // function updateTempHours(){
-    //     var timeValidate;
-    //     var context; 
-    //     var fromAMPM; 
-    //     var fromHour; 
-    //     var toHour; 
-    //     var toAMPM; 
-    //     var newDate;
-    //     var today = new Date();
-
-    //     context = $('#temp-hours');
-    //     fromHour = $('#temp-open-from').find('.dk-option-selected').attr('data-value');
-    //     if(!fromHour){
-    //         fromHour = $('#temp-open-from').find('select').val();
-    //     }
-    //     fromAMPM = $('#temp-open-from').find('#myonoffswitch-3').attr('data-time');
-    //     toHour = $('#temp-open-to').find('.dk-option-selected').attr('data-value');
-    //     if(!toHour){
-    //         toHour = $('#temp-open-to').find('select').val();
-    //     }
-    //     toAMPM = $('#temp-open-to').find('#myonoffswitch-4').attr('data-time');
-    //     newDate = $('.datepicker').val();
-        
-    //     today = today.getFullYear() + "/" + today.getMonth() + "/" + today.getDate();
-
-
-    //     // Convert to 24 Hour Format
-    //     fromHour = formatTime(fromHour, fromAMPM);
-    //     toHour = formatTime(toHour, toAMPM);
-
-    //     // Make sure from time is sooner than to time
-    //     timeValidate = compareTime(fromHour, toHour);
-
-    //     // Throw Error if no date is selected
-    //     if(newDate == ""){
-    //         displayMsg(context, "Please select a date to set temporary open hours", true); 
-    //     } else {
-    //         // Throw Error If Time Don't Validate
-    //         if(timeValidate == -1){
-    //             displayMsg(context, "Error: Closing hour can not be before opening hour", true);
-    //         } else {
-    //             updateContact('TempOpenDate', newDate, context);
-    //             updateContact('TempOpenHoursFrom', fromHour, context);
-    //             updateContact('TempOpenHoursTo', toHour, context);
-    //         }
-    //     }
-    // }
-
-    // function updateContact(record, value, context){
-    //     var status;
-
-    //     $.ajax({
-    //         url: apiURL + "api/contact/" + ID,
-    //         type: "PUT",
-    //         data: JSON.stringify([
-    //             {Name: record, Value: value}                    
-    //         ]),
-    //         headers: {
-    //             username: "contact@trueblue.com",
-    //             password: mobileNum
-    //         }, 
-    //         complete: function(){
-    //             if(status == "success"){
-    //                 displayMsg(context, 'Update Successful', false);
-    //             } else {
-    //                 displayMsg(context, 'Server Error: Please contact support@onereach.com', true);
-    //             }
-    //         },
-    //         error: function(data, err, msg) {
-    //             console.log(msg);
-    //             status = "error";
-    //         },
-    //         success: function(data){
-    //             console.log(data);
-    //             status = "success";
-    //         }
-    //     });
-    // }
-
-    
-
-    // function formatTime(time, halfday){
-    //     time = time.split(":");
-
-    //     if (halfday == "am" && parseInt(time[0]) == 12) {
-    //         time = parseInt(time[0] - 12) + ":" + time[1];
-    //     } else if (halfday == "pm" && parseInt(time[0]) != 12) {
-    //         time = parseInt(time[0]) + 12 + ":" + time[1];
-    //     } else {
-    //         time = parseInt(time[0]) + ":" + time[1];
-    //     }
-    //     // console.log(time, halfday);
-    //     return time;
-    // }
-
-   
-
-   
-
-    // function validateNumber(number){
-    //     number = parseInt(number.toString().replace(/\D/g, ''));
-    //     console.log(number);
-    //     isNumber = isNaN(number);
-    //     console.log(isNumber);
-
-    //     if(number.toString().split("").length != 10){
-    //         return -1;
-    //     } else if (isNumber == true) {
-    //         return -1;
-    //     } else {
-    //         return number;
-    //     }
-    // };

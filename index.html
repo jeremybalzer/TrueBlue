@@ -29,8 +29,9 @@
         <section id="branch">
           <div class="wrapper">
             <h1>Select Your Branch</h1>
+            <p>Choose a branch to view and edit its settings.</p>
             <form>
-              <select class="dropkick" id="branch-select">
+              <select class="dropkick block" id="branch-select">
                 <!-- This gets populated with the branches via javascript -->
               </select>
               <input id="load-branch" type="button" class="submit" value="Load Branch"/>
@@ -180,7 +181,7 @@
             <h1>Who is on call?</h1>
             <p>Enter mobile numbers for those who would like to receive voicemail notifications by text.  (10-digit numbers only, separated by commas)</p>
             <form>
-              <textarea id="call-list" rows="4" placeholder="1111111111,2222222222,3333333333"></textarea>
+              <textarea id="call-list" rows="4" placeholder="E.g. (888) 888-8888, (999) 999-9999, (000) 000-0000"></textarea>
               <input type="button" class="submit" value="Update">
             </form>
             <p class="message"></p>
