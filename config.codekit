@@ -195,7 +195,7 @@
 		"outputAbbreviatedPath": "\/js\/main-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 1,
-		"outputStyle": 0,
+		"outputStyle": 1,
 		"syntaxCheckerStyle": 0
 		},
 	"\/LESS\/elements\/arrow.less": {

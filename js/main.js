@@ -147,7 +147,8 @@ $(document).ready(function(){
         // Grab the Branch Number
         var selected = $('#branch-select').val().slice(7,11);
         var string = $('#branch-select').val();
-
+        $('.message').html("");
+        
         data = _.find(pageData.Items, function(obj){
             return obj.Data[0].Value == selected;
         });
