@@ -195,7 +195,7 @@
 		"outputAbbreviatedPath": "\/js\/main-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 1,
-		"outputStyle": 1,
+		"outputStyle": 0,
 		"syntaxCheckerStyle": 0
 		},
 	"\/LESS\/elements\/arrow.less": {
@@ -551,7 +551,7 @@
 	},
 "hooks": [
 	],
-"lastSavedByUser": "Justin Tulk",
+"lastSavedByUser": "Justin",
 "manualImportLinks": {
 	"\/js\/main.js": [
 		{

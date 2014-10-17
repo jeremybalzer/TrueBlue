@@ -71,6 +71,10 @@ $(document).ready(function(){
     if ('XDomainRequest' in window && window.XDomainRequest !== null) {
         alert('Your Browser is not compatible. Please upgrade to a modern browser.');
     } else {
+        loadPageData();
+    };
+
+    function loadPageData(){
         $.ajax({
             crossDomain: true,
             url: apiURL + "/api/querycontacts",
@@ -105,17 +109,20 @@ $(document).ready(function(){
                 console.log(msg);
             },
             complete: function(response){
-                loadBranches();
+                var isTimeLoaded = $('.12-hour[populated="true"]');
+
+                if(isTimeLoaded.length == 0) {
+                    populateTimeSelects();
+                    loadBranches();
+                } 
             },
             success: function(response){
                 pageData = response;
-                populateTimeSelects();
             }
         });
-    };
+    }
 
     function loadBranches(){
-        console.log(pageData);
         var optionList = "";
         var optionArray = [];
         var homeBranch;
@@ -169,8 +176,6 @@ $(document).ready(function(){
         branchData.tempDateOpenTo = data.Data[12].Value;
         branchData.tempDateOpenFrom = data.Data[13].Value;
 
-        console.log(branchData.office);
-        console.log(branchData);
         buildPage();
     }
 
@@ -201,55 +206,46 @@ $(document).ready(function(){
         var isDropkick;
         var status = $('#myonoffswitch-0').attr('data-attr');
 
+        // console.log(TZ);
+        // console.log(adjust);
+        // console.log(status);
+
         // Default to Eastern Time
         if(TZ == ""){
             TZ = "-4";
+        } else if (-4 < TZ || TZ < -10) {
+            console.log('Error: Returned Time Zone is Outside Current Options');
         } 
 
-        //Default to Use DST
-        if(adjust == ""){
-            adjust = "true";
-        }
-
-        if(adjust == "false" || adjust == "False"){
-            if(status == "True" || status == "true"){
-                $('#time-zone').find('.onoffswitch-checkbox').click();
-            }
-        } else if (adjust == "true" || adjust == "True") {
-            if(status == "false" || status == "False"){
-                $('#time-zone').find('.onoffswitch-checkbox').click();
-            }
-        }
-
-        if(-4 < TZ || TZ < -10){
-            console.log('Error: Returned Time Zone is Outside Current Options');
-        }
-
-        //Grab the time zone options if value is already set
-        if(TZ != ""){
-            var zones = $('#time-zone').find('option');
-            var currentZone = undefined;
-            $.each(zones, function(index, value){
-                if($(this).attr('value') == TZ){
-                    currentZone = index;
-                }
-            });
-        }
+        // Remove all the selected classes from the options
+        var zones = $('#time-zone').find('option');
+        zones.removeAttr('selected');
         
-        // Set the Current Time Zone to the index
-        $('#time-zone').find('.dropkick').dropkick({
-            initialize: function(){
-                if(currentZone != undefined ){
-                    this.select(currentZone);
-                }     
-            }
-        }); 
+        var currentZone = 'option[value="' + TZ + '"]';
+        $(currentZone).attr('selected', 'selected');
 
+        $('#time-zone').find('.dropkick').dropkick();
         isDropkick = $('#time-zone').find('.dk-option-selected');
         if(isDropkick.length == 0){
             var toFind = 'option[value="' + TZ + '"]';
             $('#time-zone').find(toFind).attr('selected', 'selected');
-        } 
+    
+        } else {
+            var toFind = 'li[data-value="' + TZ + '"]';
+            $('.dk-select-options').find(toFind).click();
+        }
+
+        // Configure DST Toggle
+        // Default to DST if unset
+        if(adjust == ""){
+            adjust = "true";
+        }
+
+        if(adjust == "false" || adjust == "False" && status == "True" || status == "true"){
+            $('#time-zone').find('.onoffswitch-checkbox').click();
+        } else if (adjust == "true" || adjust == "True" && status == "false" || status == "False") {
+            $('#time-zone').find('.onoffswitch-checkbox').click();
+        }
     }
 
     // Configure the Open Hours to match the record
@@ -447,13 +443,14 @@ $(document).ready(function(){
                 } else {
                     displayMsg(context, 'Server Error: Please contact support@onereach.com', true);
                 }
+                loadPageData();
             },
             error: function(data, err, msg) {
                 console.log(msg);
                 status = "error";
             },
             success: function(data){
-                console.log(data);
+                // console.log(data);
                 status = "success";
             }
         });
@@ -695,6 +692,7 @@ function populateTimeSelects(){
     // Populate the Time Selects
     var hourInput = $('.12-hour');
     $.each(hourInput, function(index, value) {
+        $(this).attr('populated', 'true');
         for (i = 1; i < 13; i++) {
             for (j = 0; j < 4; j++) {
                 var minutes = j * 15;
