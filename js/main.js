@@ -146,7 +146,18 @@ $(document).ready(function(){
             optionList = optionList + value.element;
         });
 
-        $('#branch-select').append(optionList).dropkick();
+        $('#branch-select').append(optionList)
+
+        optionList = $('#branch-select option');
+        $.each(optionList, function(index, value){
+            var that = $(this).val();
+            var branch = getCookie('branch');
+            if(that == branch){
+                $(this).attr('selected', 'selected');
+            } 
+        });
+
+        $('#branch-select').dropkick();
     }
 
     // This grabs the branchData for the object in the Select Your Branch option
@@ -177,6 +188,8 @@ $(document).ready(function(){
         branchData.tempDateOpenFrom = data.Data[13].Value;
 
         buildPage();
+
+        setCookie('branch', string, 60);
     }
 
     function buildPage(){
