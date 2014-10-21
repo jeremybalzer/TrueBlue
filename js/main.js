@@ -26,8 +26,11 @@ $(document).ready(function(){
       }
     }());
 
+    // ############ Add Time Selects ############
+    populateTimeSelects();
+
     // ############ Variables ############
-    var apiURL = "https://ent-wapi.onereach.com/";
+    var apiURL = "http://entor-wapi.onereach.com/";
 
     // ############ Attach Click Handlers ############
     $('#load-branch').on('click', loadBranch);
@@ -44,8 +47,8 @@ $(document).ready(function(){
         togglePadlock(sec);
     });
 
-    // Toggle Padlocks
-    $('.padlock').on('click', function(){
+    $('.padlock').on('click', function(e){
+        e.preventDefault();
         $(this).closest('section').toggleClass('locked').toggleClass('unlocked');
     })
 
@@ -68,6 +71,7 @@ $(document).ready(function(){
     });
 
     // ############ Make the initial call ############
+
     if ('XDomainRequest' in window && window.XDomainRequest !== null) {
         alert('Your Browser is not compatible. Please upgrade to a modern browser.');
     } else {
@@ -108,16 +112,10 @@ $(document).ready(function(){
             error: function(data, err, msg){
                 console.log(msg);
             },
-            complete: function(response){
-                var isTimeLoaded = $('.12-hour[populated="true"]');
-
-                if(isTimeLoaded.length == 0) {
-                    populateTimeSelects();
-                    loadBranches();
-                } 
-            },
             success: function(response){
                 pageData = response;
+                console.log(pageData);
+                loadBranches();
             }
         });
     }
@@ -172,20 +170,48 @@ $(document).ready(function(){
         });
 
         branchData.ID = data.Id;
-        branchData.shortCode = data.Data[0].Value; 
-        branchData.office = data.Data[1].Value;
-        branchData.phone = data.Data[2].Value;
-        branchData.openHoursFrom = data.Data[3].Value;
-        branchData.openHoursTo = data.Data[4].Value;
-        branchData.tempOpenHoursFrom = data.Data[5].Value;
-        branchData.tempOpenHoursTo = data.Data[6].Value;
-        branchData.timeZone = data.Data[7].Value;
-        branchData.backupNeeded = data.Data[8].Value;
-        branchData.backupNumber = data.Data[9].Value;
-        branchData.whosOnCall = data.Data[10].Value;
-        branchData.useDST = data.Data[11].Value;
-        branchData.tempDateOpenTo = data.Data[12].Value;
-        branchData.tempDateOpenFrom = data.Data[13].Value;
+        branchData.shortCode = _.find(data.Data, function(record){
+            return record.Name == 'First Name';
+        }).Value; 
+        branchData.office = _.find(data.Data, function(record){
+            return record.Name == 'Last Name';
+        }).Value;
+        branchData.phone = _.find(data.Data, function(record){
+            return record.Name == 'Line1';
+        }).Value;
+        branchData.openHoursFrom = _.find(data.Data, function(record){
+            return record.Name == 'OpenHoursFrom';
+        }).Value;
+        branchData.openHoursTo = _.find(data.Data, function(record){
+            return record.Name == 'OpenHoursTo';
+        }).Value;
+        branchData.tempOpenHoursFrom = _.find(data.Data, function(record){
+            return record.Name == 'TempOpenHoursFrom';
+        }).Value;
+        branchData.tempOpenHoursTo = _.find(data.Data, function(record){
+            return record.Name == 'TempOpenHoursTo';
+        }).Value;
+        branchData.timeZone = _.find(data.Data, function(record){
+            return record.Name == 'TimeZone';
+        }).Value;
+        branchData.backupNeeded = _.find(data.Data, function(record){
+            return record.Name == 'TN Backup Needed';
+        }).Value;
+        branchData.backupNumber = _.find(data.Data, function(record){
+            return record.Name == 'TN Backup Phone';
+        }).Value;
+        branchData.whosOnCall = _.find(data.Data, function(record){
+            return record.Name == 'WhosOnCall';
+        }).Value;
+        branchData.useDST = _.find(data.Data, function(record){
+            return record.Name == 'UseDST';
+        }).Value;
+        branchData.tempDateOpenTo = _.find(data.Data, function(record){
+            return record.Name == 'TempOpenDateTo';
+        }).Value;
+        branchData.tempDateOpenFrom = _.find(data.Data, function(record){
+            return record.Name == 'TempOpenDateFrom';
+        }).Value;
 
         buildPage();
 
@@ -193,6 +219,7 @@ $(document).ready(function(){
     }
 
     function buildPage(){
+        showSections();
         populateHeader();
         populateTimezone();
         populateOpenHours();
@@ -200,7 +227,6 @@ $(document).ready(function(){
         populateTempHours();
         populateWhoIsOnCall();
         populateTransferNumber();
-        showSections();
     }
 
      // Populate the Header
@@ -218,10 +244,6 @@ $(document).ready(function(){
         var adjust = branchData.useDST;
         var isDropkick;
         var status = $('#myonoffswitch-0').attr('data-attr');
-
-        // console.log(TZ);
-        // console.log(adjust);
-        // console.log(status);
 
         // Default to Eastern Time
         if(TZ == ""){
@@ -264,11 +286,12 @@ $(document).ready(function(){
     // Configure the Open Hours to match the record
     function populateOpenHours(){
         // Get Both Times
-        var oHourFrom = branchData.openHoursFrom;
-        var oHourTo = branchData.openHoursTo;
-        // console.log(oHourFrom);
-        // console.log(oHourTo);
+        var oHourFrom = removeSeconds(branchData.openHoursFrom);
+        var oHourTo = removeSeconds(branchData.openHoursTo);
         var context; 
+
+        doDropkick($('#open-from'));
+        doDropkick($('#open-to'));
 
         // Are times populated? 
         if(oHourFrom != "" && oHourTo != ""){
@@ -300,9 +323,6 @@ $(document).ready(function(){
             $('#open-to').find('.dk-selected').html('0:00');
             displayMsg(context, "Please Update Open Hours", true);
         }
-
-        doDropkick($('#open-from'));
-        doDropkick($('#open-to'));
     };
 
     // Configure the Temp Hour Date to match the record
@@ -339,13 +359,14 @@ $(document).ready(function(){
 
     // Configure the Temp Hours to match the record
     function populateTempHours(){
-        // Get Both Times
-        var tempHourFrom = branchData.tempOpenHoursFrom;
-        var tempHourTo = branchData.tempOpenHoursTo;
+        var tempHourFrom = removeSeconds(branchData.tempOpenHoursFrom);
+        var tempHourTo = removeSeconds(branchData.tempOpenHoursTo);
         var fromDate = new Date(branchData.tempDateOpenFrom);
         var toDate = new Date(branchData.tempDateOpenTo);
         var context;
 
+        doDropkick($('#temp-open-from'));
+        doDropkick($('#temp-open-to'));
 
         // Are times populated? 
         if(tempHourFrom != "" && tempHourTo != ""){
@@ -375,10 +396,7 @@ $(document).ready(function(){
             $('#temp-open-to').find('.dk-selected').html('0:00');
             context = $('#temp-hours');
             displayMsg(context, "Please Update Temporary Open Hours", true);
-        }
-
-        doDropkick($('#temp-open-from'));
-        doDropkick($('#temp-open-to'));
+        }   
     }
 
     // Configure Who is on Call
@@ -402,6 +420,7 @@ $(document).ready(function(){
 
     // Configure the Transfer Number to match the record
     function populateTransferNumber(){
+        // debugger;
         var isNeeded = branchData.backupNeeded; 
         var number = formatPhoneNumber(branchData.backupNumber);
         var status = $('#myonoffswitch-5').attr('data-boolean');
@@ -601,7 +620,7 @@ $(document).ready(function(){
                 $.each(newListArray, function(index, value){
                     flag = validateNumber(value);
                     if(flag == -1){
-                        displayMsg(context, "Please enter ten digits numbers separated by commas and no spaces", true);
+                        displayMsg(context, "Please enter ten digit numbers separated by commas", true);
                         flagArray.push(flag);
                     } else {
                         if(newCallList == "") {
@@ -719,6 +738,16 @@ function populateTimeSelects(){
     });
 };
 
+// Remove the seconds from a returned time
+function removeSeconds(time){
+    var timeArr = time.split(":");
+    if (timeArr.length == 3){
+        time = timeArr[0] + ":" + timeArr[1];
+    } 
+
+    return time;
+}
+
 // Split the time into Hours and Minutes and update the control
 function timeSplitter(time, context){
     var dk;
@@ -763,9 +792,9 @@ function timeSplitter(time, context){
 
 function validateNumber(number){
     number = parseInt(number.toString().replace(/\D/g, ''));
-    console.log(number);
+    // console.log(number);
     isNumber = isNaN(number);
-    console.log(isNumber);
+    // console.log(isNumber);
 
     if(number.toString().split("").length != 10){
         return -1;
