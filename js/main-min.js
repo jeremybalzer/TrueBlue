@@ -9049,6 +9049,8 @@ jQuery.fn.dropkick = function () {
 
 var pageData;
 var branchData = {};
+var toPick;
+var fromPick;
 
 $(document).ready(function(){
 
@@ -9091,15 +9093,24 @@ $(document).ready(function(){
     $('#on-call').find('input.submit').on('click', updateCallList);
     $('#transfer-number').find('input.submit').on('click', updateTransferNumber);
 
-    $('input.submit').on('click', function(){
-        var sec = $(this).closest('section');
-        togglePadlock(sec);
-    });
-
+    // Only open padlock if all padlocks are closed
     $('.padlock').on('click', function(e){
         e.preventDefault();
-        $(this).closest('section').toggleClass('locked').toggleClass('unlocked');
-    })
+        var lockArray = $('section.unlocked');
+        if(lockArray.length === 0){
+            togglePadlock($(this).closest('section'));
+        } else if (lockArray.length === 1){
+            if(lockArray.attr('id') == $(this).closest('section').attr('id')){
+                togglePadlock($(this).closest('section'));
+            }
+        }
+    });
+
+    // Cancel
+    $('a.button').on('click', function(){
+        loadBranch();
+        togglePadlock($(this).closest('section'));
+    });
 
     // Toggle On/Off Switches
     $('.onoffswitch-checkbox').on('click', function(){
@@ -9163,7 +9174,7 @@ $(document).ready(function(){
             },
             success: function(response){
                 pageData = response;
-                console.log(pageData);
+                console.log('pageData Loaded');
                 loadBranches();
             }
         });
@@ -9205,6 +9216,12 @@ $(document).ready(function(){
         });
 
         $('#branch-select').dropkick();
+
+        //refresh branch if one is open
+        var isBranchLoaded = $('#time-zone').hasClass('hidden');
+        if(isBranchLoaded === false){
+            loadBranch();
+        }
     }
 
     // This grabs the branchData for the object in the Select Your Branch option
@@ -9268,7 +9285,7 @@ $(document).ready(function(){
     }
 
     function buildPage(){
-        showSections();
+        $('section').removeClass('hidden');
         populateHeader();
         populateTimezone();
         populateOpenHours();
@@ -9380,30 +9397,39 @@ $(document).ready(function(){
         var toDate = new Date(branchData.tempDateOpenTo);
         var today = new Date();
         var pickers = $('.datepicker');
+        var isPikLoaded = $('.pika-single');
 
+        if(isPikLoaded.length === 0){
+            // fromPick = $(pickers[0]).pikaday({
+            fromPick = new Pikaday({
+                field: $('.datepicker')[0],
+                format: 'MM/DD/YYYY',
+                minDate: today,
+                defaultDate: fromDate,
+                setDefaultDate: true,
+                onSelect: function(){
+                    var date = document.createTextNode(this.getMoment().format('DD MM YYYY'))
+                    $('.selected').html(date);
+                }
+            });
 
-        // Initiate the Datepicker and Select Styling Plugins
-        $(pickers[0]).pikaday({
-            format: 'MM/DD/YYYY',
-            minDate: today,
-            defaultDate: fromDate,
-            setDefaultDate: true,
-            onSelect: function(){
-                var date = document.createTextNode(this.getMoment().format('DD MM YYYY'))
-                $('.selected').html(date);
-            }
-        });
-
-        $(pickers[1]).pikaday({
-            format: 'MM/DD/YYYY',
-            minDate: today,
-            defaultDate: toDate,
-            setDefaultDate: true,
-            onSelect: function(){
-                var date = document.createTextNode(this.getMoment().format('DD MM YYYY'))
-                $('.selected').html(date);
-            }
-        });
+            // toPick = $(pickers[1]).pikaday({
+            toPick = new Pikaday({
+                field: $('.datepicker')[1],
+                format: 'MM/DD/YYYY',
+                minDate: today,
+                defaultDate: toDate,
+                setDefaultDate: true,
+                onSelect: function(){
+                    var date = document.createTextNode(this.getMoment().format('DD MM YYYY'))
+                    $('.selected').html(date);
+                }
+            });
+        } else {
+            // debugger;
+            fromPick.setDate(fromDate);
+            toPick.setDate(toDate);
+        }
     }
 
     // Configure the Temp Hours to match the record
@@ -9419,27 +9445,8 @@ $(document).ready(function(){
 
         // Are times populated? 
         if(tempHourFrom != "" && tempHourTo != ""){
-
-            //is time2 later than time1? 
-            var flag = compareTime(tempHourFrom, tempHourTo);
-
-            //If times validate adjust the select elements, otherwise display an error
-            if(flag == 1){
-                context = $('#temp-open-from');
-                timeSplitter(tempHourFrom, context);
-
-                context = $('#temp-open-to');
-                timeSplitter(tempHourTo, context);
-            } 
-
-            // Times don't validate, prompt user to update them
-            else {
-                if(tempHourFrom == tempHourTo){
-                    console.log('Temp Open Hours Time From must be earlier than Time To');
-                    context = $('#temp-hours');
-                    displayMsg(context, "Please Update Temporary Open Hours", true);
-                }
-            }
+            timeSplitter(tempHourFrom, $('#temp-open-from'));
+            timeSplitter(tempHourTo, $('#temp-open-to'));
         } else {
             $('#temp-open-from').find('.dk-selected').html('0:00');
             $('#temp-open-to').find('.dk-selected').html('0:00');
@@ -9469,22 +9476,25 @@ $(document).ready(function(){
 
     // Configure the Transfer Number to match the record
     function populateTransferNumber(){
-        // debugger;
-        var isNeeded = branchData.backupNeeded; 
         var number = formatPhoneNumber(branchData.backupNumber);
         var status = $('#myonoffswitch-5').attr('data-boolean');
-        if(isNeeded != ""){
-            if(isNeeded == "on"){
+        if(branchData.backupNeeded != ""){
+            if(branchData.backupNeeded === "on"){
                 if(status == "off" || status == "Off"){
-                    $('#myonoffswitch-5').click().attr('data-boolean', isNeeded); 
+                    $('#myonoffswitch-5').click().attr('data-boolean', branchData.backupNeeded); 
                 }
+            } else {
+               if(status == "on" || status == "On"){
+                    $('#myonoffswitch-5').click().attr('data-boolean', branchData.backupNeeded); 
+                } 
             }
         } 
 
         if(branchData.backupNumber == ""){
             $('#update-number').attr('placeholder', 'No Backup Number in Record');
         } else {
-           $('#update-number').attr('placeholder', 'Current: ' + number); 
+            $('#update-number').val('');
+            $('#update-number').attr('placeholder', 'Current: ' + number); 
         } 
     }
 
@@ -9492,17 +9502,6 @@ $(document).ready(function(){
     function togglePadlock(context){
         context.toggleClass('locked').toggleClass('unlocked');
     }
-
-    // Unhide the sections after a branch load
-    function showSections(){
-        var sections = $('section');
-        $.each(sections, function(index, value){
-            var isHidden = $(this).hasClass('hidden');
-            if(isHidden == true){
-                $(this).removeClass('hidden');
-            }
-        })
-    };
 
     // Make an ajax request to store a new branch record
     function updateContact(record, value, context){
@@ -9521,6 +9520,7 @@ $(document).ready(function(){
             complete: function(){
                 if(status == "success"){
                     displayMsg(context, 'Update Successful', false);
+                    // context.addClass('locked').removeClass('unlocked');
                 } else {
                     displayMsg(context, 'Server Error: Please contact support@onereach.com', true);
                 }
@@ -9664,23 +9664,34 @@ $(document).ready(function(){
             var newListArray = newList.split(",");
             var flagArray = [];
             var newCallList = "";
+            var formattedCallList = "";
             if(0 < newListArray.length){
                 
                 $.each(newListArray, function(index, value){
                     flag = validateNumber(value);
+
                     if(flag == -1){
                         displayMsg(context, "Please enter ten digit numbers separated by commas", true);
                         flagArray.push(flag);
                     } else {
                         if(newCallList == "") {
                             newCallList = flag.toString();
+                            // console.log(newCallList);
                         } else {
-                            newCallList = newCallList + "," + flag;
+                            newCallList = newCallList + "," + flag; 
                         }
                     }
                 }); 
             }
             if( flagArray.length == 0) {
+                $.each(newCallList.split(","), function(index, value){
+                    if(index == 0){
+                        formattedCallList = formatPhoneNumber(value);
+                    } else {
+                        formattedCallList = formattedCallList + ", " + formatPhoneNumber(value);
+                    }
+                });
+                $('#call-list').val(formattedCallList);
                 updateContact("WhosOnCall",newCallList, context);
             }
         }  
@@ -9706,171 +9717,174 @@ $(document).ready(function(){
             }
         }    
     }
-});
 
-function doDropkick(context){
-    var isKicked = context.find('.dk-select-options');
-    if(isKicked.length == 0){
-        context.find('.dropkick').dropkick();
-    }
-}
-
- // Make sure time2 is later than time1
-function compareTime(time1, time2){
-    time1 = time1.split(":");
-    time1 = time1[0] + time1[1];
-
-    time2 = time2.split(":");
-    time2 = time2[0] + time2[1];
-
-    // Is time2 later than time1?
-    if(parseInt(time1) < parseInt(time2)){
-        return 1;
-    } else {
-        return -1;
-    }
-}
-
-function displayMsg(context, msg, isError){
-    var color;
-    var align;
-
-    if(isError == true) {
-        // Error Messages get left on screen
-        color = "#ff0000";
-        align = "left";
-    } else {
-        align = "right";
-        color = "#00AEEF";
-        // Hide a successful message after it updates
-        setTimeout(function(){
-           context.find('.message').fadeOut(300);
-        }, 2500);
-    }
-    context.find('.message').html(msg).show().css({'color': color, 'text-align': align});
-}
-
-function formatPhoneNumber(number){
-    number = "(" + number.slice(0,3) + ") " + number.slice(3,6) + "-" + number.slice(6,10);
-    return number;
-}
-
-function formatTime(time, halfday){
-    time = time.split(":");
-
-    if (halfday == "am" && parseInt(time[0]) == 12) {
-        time = parseInt(time[0] - 12) + ":" + time[1];
-    } else if (halfday == "pm" && parseInt(time[0]) != 12) {
-        time = parseInt(time[0]) + 12 + ":" + time[1];
-    } else {
-        time = parseInt(time[0]) + ":" + time[1];
-    }
-    // console.log(time, halfday);
-    return time;
-}
-
-function populateTimeSelects(){
-    // Populate the Time Selects
-    var hourInput = $('.12-hour');
-    $.each(hourInput, function(index, value) {
-        $(this).attr('populated', 'true');
-        for (i = 1; i < 13; i++) {
-            for (j = 0; j < 4; j++) {
-                var minutes = j * 15;
-                if (minutes == 0) {
-                    minutes = "00";
-                }
-                var time = i + ":" + minutes;
-                $(value).append("<option value='" + time + "'>" + time + "</option>");
-            }
-        }
-    });
-};
-
-// Remove the seconds from a returned time
-function removeSeconds(time){
-    var timeArr = time.split(":");
-    if (timeArr.length == 3){
-        time = timeArr[0] + ":" + timeArr[1];
-    } 
-
-    return time;
-}
-
-// Split the time into Hours and Minutes and update the control
-function timeSplitter(time, context){
-    var dk;
-    var optionArray;
-    var absTime;
-    var status;
-
-    time = time.split(":");
-    
-    // Toggle the AM/PM Switch
-    if(time[0] < 12){
-    } else {
-        //adjust to a 12 hour clock
-        if(12 < time[0]){
-            time[0] = parseInt(time[0]) - 12;
-        }
-        // Toggle the AM/PM switch to PM
-        var status = context.find('.onoffswitch-checkbox').attr('data-time');
-        if(status == "am" || status == "AM"){
-            context.find('.onoffswitch-checkbox').click();
+    function doDropkick(context){
+        var isKicked = context.find('.dk-select-options');
+        if(isKicked.length == 0){
+            context.find('.dropkick').dropkick();
         }
     }
 
-    // Update the selected option by getting all the options
-    optionArray = context.find('.dk-option');
+     // Make sure time2 is later than time1
+    function compareTime(time1, time2){
+        time1 = time1.split(":");
+        time1 = time1[0] + time1[1];
 
-    // Get an absolute value of the time to compare
-    if(parseInt(time[0]) == 0){
-        time[0] = "12";
-    };
+        time2 = time2.split(":");
+        time2 = time2[0] + time2[1];
 
-    var absTime = parseInt(time[0]) + ":" + time[1];
-    context.find('li[data-value="'+ absTime +'"]').click();
-    $('div.dk-select').removeClass('dk-select-open-down');
-
-    // If dropkick isn't initiated manually grab the proper select
-    if(optionArray.length == 0){
-        var toFind = 'option[value="' + absTime + '"]';
-        context.find(toFind).attr('selected', 'selected');
+        // Is time2 later than time1?
+        if(parseInt(time1) < parseInt(time2)){
+            return 1;
+        } else {
+            return -1;
+        }
     }
-}
 
-function validateNumber(number){
-    number = parseInt(number.toString().replace(/\D/g, ''));
-    // console.log(number);
-    isNumber = isNaN(number);
-    // console.log(isNumber);
+    function displayMsg(context, msg, isError){
+        var color;
+        var align;
 
-    if(number.toString().split("").length != 10){
-        return -1;
-    } else if (isNumber == true) {
-        return -1;
-    } else {
+        if(isError == true) {
+            // Error Messages get left on screen
+            color = "#ff0000";
+            align = "left";
+            context.find('.message').html(msg).show().css({'color': color, 'text-align': align});
+        } else {
+            align = "left";
+            color = "#00AEEF";
+            context.find('input.submit').attr('value', '✓');
+            // Hide a successful message after it updates
+            setTimeout(function(){
+               // context.find('.message').fadeOut(300);
+               context.find('input.submit').attr('value', 'Update');
+               context.addClass('locked').removeClass('unlocked');
+            }, 1050);
+        }
+        // context.find('.message').html(msg).show().css({'color': color, 'text-align': align});
+    }
+
+    function formatPhoneNumber(number){
+        number = "(" + number.slice(0,3) + ") " + number.slice(3,6) + "-" + number.slice(6,10);
         return number;
     }
-};
 
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
-}
+    function formatTime(time, halfday){
+        time = time.split(":");
 
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+        if (halfday == "am" && parseInt(time[0]) == 12) {
+            time = parseInt(time[0] - 12) + ":" + time[1];
+        } else if (halfday == "pm" && parseInt(time[0]) != 12) {
+            time = parseInt(time[0]) + 12 + ":" + time[1];
+        } else {
+            time = parseInt(time[0]) + ":" + time[1];
+        }
+        // console.log(time, halfday);
+        return time;
     }
-    return "";
-}
 
+    function populateTimeSelects(){
+        // Populate the Time Selects
+        var hourInput = $('.12-hour');
+        $.each(hourInput, function(index, value) {
+            $(this).attr('populated', 'true');
+            for (i = 1; i < 13; i++) {
+                for (j = 0; j < 4; j++) {
+                    var minutes = j * 15;
+                    if (minutes == 0) {
+                        minutes = "00";
+                    }
+                    var time = i + ":" + minutes;
+                    $(value).append("<option value='" + time + "'>" + time + "</option>");
+                }
+            }
+        });
+    };
+
+    // Remove the seconds from a returned time
+    function removeSeconds(time){
+        var timeArr = time.split(":");
+        if (timeArr.length == 3){
+            time = timeArr[0] + ":" + timeArr[1];
+        } 
+
+        return time;
+    }
+
+    // Split the time into Hours and Minutes and update the control
+    function timeSplitter(time, context){
+        var dk;
+        var optionArray;
+        var absTime;
+        var status;
+
+        time = time.split(":");
+        
+        // Toggle the AM/PM Switch
+        if(time[0] < 12){
+        } else {
+            //adjust to a 12 hour clock
+            if(12 < time[0]){
+                time[0] = parseInt(time[0]) - 12;
+            }
+            // Toggle the AM/PM switch to PM
+            var status = context.find('.onoffswitch-checkbox').attr('data-time');
+            if(status == "am" || status == "AM"){
+                context.find('.onoffswitch-checkbox').click();
+            }
+        }
+
+        // Update the selected option by getting all the options
+        optionArray = context.find('.dk-option');
+
+        // Get an absolute value of the time to compare
+        if(parseInt(time[0]) == 0){
+            time[0] = "12";
+        };
+
+        var absTime = parseInt(time[0]) + ":" + time[1];
+        context.find('li[data-value="'+ absTime +'"]').click();
+        $('div.dk-select').removeClass('dk-select-open-down');
+
+        // If dropkick isn't initiated manually grab the proper select
+        if(optionArray.length == 0){
+            var toFind = 'option[value="' + absTime + '"]';
+            context.find(toFind).attr('selected', 'selected');
+        }
+    }
+
+    function validateNumber(number){
+        number = parseInt(number.toString().replace(/\D/g, ''));
+        // console.log(number);
+        isNumber = isNaN(number);
+        // console.log(isNumber);
+
+        if(number.toString().split("").length != 10){
+            return -1;
+        } else if (isNumber == true) {
+            return -1;
+        } else {
+            return number;
+        }
+    };
+
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+});
 
 

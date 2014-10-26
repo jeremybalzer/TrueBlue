@@ -33,6 +33,7 @@ form {
 		font-weight: bold;
 		padding: 5px 15px;
 		width: auto;
+		.transition(all 0.35s);
 
 		&.overlay {
 			position: absolute;
@@ -54,15 +55,17 @@ form {
 			position: static;
 		}
 
-		&:hover, &:active {
-			color: @text;
-		}
+		// &:hover, &:active {
+		// 	color: @text;
+		// }
 	}
 
 	input.submit{
 		background-color: @blue;
+		box-sizing: border-box;
 		border: solid 1px @blue;
 		color: @white;
+		min-width: 80px;
 		
 		&:hover, &:active {
 			background-color: lighten(@blue, 10%);
