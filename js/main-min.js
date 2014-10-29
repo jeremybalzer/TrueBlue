@@ -9049,8 +9049,8 @@ jQuery.fn.dropkick = function () {
 
 var pageData;
 var branchData = {};
-var toPick;
 var fromPick;
+var toPick;
 
 $(document).ready(function(){
 
@@ -9174,7 +9174,7 @@ $(document).ready(function(){
             },
             success: function(response){
                 pageData = response;
-                console.log('pageData Loaded');
+                console.log(pageData);
                 loadBranches();
             }
         });
@@ -9189,7 +9189,7 @@ $(document).ready(function(){
         // For each branch build a select
         $.each(pageData.Items, function(index, value){
             // console.log(value);
-            var option = "<option data-attr='" + value.Id + "'>Branch " + value.Data[0].Value + ": " + value.Data[1].Value + "</option>"; 
+            var option = "<option data-attr='" + value.Id + "'>" + value.Data[0].Value + ": " + value.Data[1].Value + "</option>"; 
             var opObj = {
                 element: option,
                 name: value.Data[1].Value,
@@ -9199,7 +9199,7 @@ $(document).ready(function(){
             optionArray.push(opObj);
         });
 
-        optionArray = _.sortBy(optionArray, 'name');
+        optionArray = _.sortBy(optionArray, 'key');
         $.each(optionArray, function(index, value){
             optionList = optionList + value.element;
         });
@@ -9227,13 +9227,15 @@ $(document).ready(function(){
     // This grabs the branchData for the object in the Select Your Branch option
     function loadBranch(){
         // Grab the Branch Number
-        var selected = $('#branch-select').val().slice(7,11);
+        var selected = $('#branch-select').val().slice(0,4);
         var string = $('#branch-select').val();
         $('.message').html("");
         
         data = _.find(pageData.Items, function(obj){
             return obj.Data[0].Value == selected;
         });
+
+        // debugger;
 
         branchData.ID = data.Id;
         branchData.shortCode = _.find(data.Data, function(record){
@@ -9272,10 +9274,10 @@ $(document).ready(function(){
         branchData.useDST = _.find(data.Data, function(record){
             return record.Name == 'UseDST';
         }).Value;
-        branchData.tempDateOpenTo = _.find(data.Data, function(record){
+        branchData.tempOpenDateTo = _.find(data.Data, function(record){
             return record.Name == 'TempOpenDateTo';
         }).Value;
-        branchData.tempDateOpenFrom = _.find(data.Data, function(record){
+        branchData.tempOpenDateFrom = _.find(data.Data, function(record){
             return record.Name == 'TempOpenDateFrom';
         }).Value;
 
@@ -9393,8 +9395,8 @@ $(document).ready(function(){
 
     // Configure the Temp Hour Date to match the record
     function populateTempDate(){
-        var fromDate = new Date(branchData.tempDateOpenFrom);
-        var toDate = new Date(branchData.tempDateOpenTo);
+        var fromDate = new Date(branchData.tempOpenDateFrom);
+        var toDate = new Date(branchData.tempOpenDateTo);
         var today = new Date();
         var pickers = $('.datepicker');
         var isPikLoaded = $('.pika-single');
@@ -9436,8 +9438,8 @@ $(document).ready(function(){
     function populateTempHours(){
         var tempHourFrom = removeSeconds(branchData.tempOpenHoursFrom);
         var tempHourTo = removeSeconds(branchData.tempOpenHoursTo);
-        var fromDate = new Date(branchData.tempDateOpenFrom);
-        var toDate = new Date(branchData.tempDateOpenTo);
+        var fromDate = new Date(branchData.tempOpenDateFrom);
+        var toDate = new Date(branchData.tempOpenDateTo);
         var context;
 
         doDropkick($('#temp-open-from'));
@@ -9820,15 +9822,21 @@ $(document).ready(function(){
 
         time = time.split(":");
         
+        // debugger;
         // Toggle the AM/PM Switch
         if(time[0] < 12){
+            // Toggle the AM/PM switch to PM
+            status = context.find('.onoffswitch-checkbox').attr('data-time');
+            if(status == "pm" || status == "PM"){
+                context.find('.onoffswitch-checkbox').click();
+            }
         } else {
             //adjust to a 12 hour clock
             if(12 < time[0]){
                 time[0] = parseInt(time[0]) - 12;
             }
             // Toggle the AM/PM switch to PM
-            var status = context.find('.onoffswitch-checkbox').attr('data-time');
+            status = context.find('.onoffswitch-checkbox').attr('data-time');
             if(status == "am" || status == "AM"){
                 context.find('.onoffswitch-checkbox').click();
             }
